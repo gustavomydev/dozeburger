@@ -1,0 +1,3779 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do Zé Burguer — Site One-Page</title>
+<meta name="description" content="Do Zé Burguer: hamburgueria artesanal de esquina no Campos Elíseos, centro de São Paulo. Mais que uma esquina.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Tokens, utilities and components (basecoat 1.0 markup, no CDN); artifacts
+   override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+  --success: #0a7a35;
+  --danger: #c0262d;
+  --warning: #8a5300;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    --success: #4ade80;
+    --danger: #f87171;
+    --warning: #fbbf24;
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+/* Pages generated before the shell had its own components still link the
+   basecoat CDN, which reads its own tokens and switches theme only on a
+   .dark class. Bridged to the shell's, whatever of it those pages use takes
+   the page's accent and follows the declared theme. Its --accent token is a
+   hover tint, renamed in its theme as --color-accent; the shell's --accent is
+   the brand colour, so the tint is derived from it here. */
+:root {
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-contrast);
+  --secondary: color-mix(in srgb, var(--text) 7%, var(--surface));
+  --secondary-foreground: var(--text);
+  --muted: color-mix(in srgb, var(--text) 5%, var(--surface));
+  --muted-foreground: var(--text-muted);
+  --color-accent: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  --color-accent-foreground: var(--text);
+  --destructive: var(--danger);
+  --input: var(--border);
+  --ring: var(--accent);
+}
+* { box-sizing: border-box; }
+/* The reset the pages were written against: they all linked basecoat, which
+   ships Tailwind's. Its components now live here, so the reset does too. */
+*, ::before, ::after, ::backdrop { margin: 0; padding: 0; border: 0 solid; }
+/* Preflight's rule too: without it a component class that sets display
+   (.alert, .card, .btn…) beats the hidden attribute and shows the element. */
+[hidden]:where(:not([hidden="until-found"])) { display: none !important; }
+.hidden { display: none !important; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+b, strong { font-weight: bolder; }
+ol, ul, menu { list-style: none; }
+svg, video, canvas, iframe { display: block; vertical-align: middle; }
+button, input, select, textarea { color: inherit; background-color: transparent; border-radius: 0; }
+table { border-collapse: collapse; }
+hr { height: 0; color: inherit; border-top-width: 1px; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: clamp(22px, 2.3vw, 28px); font-weight: 650; line-height: 1.1; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: var(--success); }
+.kpi .kpi-delta.down { color: var(--danger); }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+.chart-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-top: 12px; font-size: 12.5px; color: var(--text-muted); }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.chart-legend b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge, .eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+/* A pill keeps its content width inside flex and grid columns, which would
+   otherwise stretch it across the card; a centred parent still centres it. */
+.shell-badge, .eyebrow, .badge { width: fit-content; max-width: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+/* Layout and type utilities: what the pages kept spelling in style="".
+   Spacing and type sizes follow Tailwind's scale; there is no Tailwind. */
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.stack { display: flex; flex-direction: column; gap: var(--space); }
+.between { justify-content: space-between; }
+.grow { flex: 1 1 0; min-width: 0; }
+.cols-2, .cols-3, .cols-4, .cols-5 { display: grid; gap: var(--space); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 720px) {
+  .cols-2, .cols-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cols-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1000px) { .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.gap-1 { gap: 4px; } .gap-2 { gap: 8px; } .gap-3 { gap: 12px; } .gap-4 { gap: 16px; } .gap-6 { gap: 24px; }
+.m-0 { margin: 0; }
+.mt-1 { margin-top: 4px; } .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 12px; } .mt-4 { margin-top: 16px; } .mt-6 { margin-top: 24px; }
+.mb-1 { margin-bottom: 4px; } .mb-2 { margin-bottom: 8px; } .mb-3 { margin-bottom: 12px; } .mb-4 { margin-bottom: 16px; } .mb-6 { margin-bottom: 24px; }
+.p-2 { padding: 8px; } .p-3 { padding: 12px; } .p-4 { padding: 16px; } .p-6 { padding: 24px; }
+.text-xs { font-size: 12px; } .text-sm { font-size: 14px; } .text-base { font-size: 16px; }
+.text-lg { font-size: 18px; } .text-xl { font-size: 20px; line-height: 1.35; }
+.text-2xl { font-size: 24px; line-height: 1.25; } .text-3xl { font-size: 30px; line-height: 1.2; }
+.font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
+.text-right { text-align: right; } .text-center { text-align: center; }
+.nowrap { white-space: nowrap; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.w-full { width: 100%; }
+.text-success { color: var(--success); } .text-danger { color: var(--danger); } .text-warning { color: var(--warning); }
+
+/* Components, with basecoat 1.0 markup (variants and sizes are data
+   attributes) and the shell tokens, so a page needs neither component CSS
+   nor a CSS framework. An older page that also links basecoat gets these
+   rules after it, over the same properties. */
+button, input, select, textarea { font: inherit; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: calc(var(--radius) - 2px);
+  background: var(--accent); color: var(--accent-contrast);
+  font-size: 14px; font-weight: 500; line-height: 1; white-space: nowrap; text-decoration: none; cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+.btn:hover { background: color-mix(in srgb, var(--accent) 86%, #000); }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: 0.5; pointer-events: none; }
+.btn[data-variant="secondary"] { background: color-mix(in srgb, var(--text) 8%, var(--surface)); color: var(--text); }
+.btn[data-variant="secondary"]:hover { background: color-mix(in srgb, var(--text) 14%, var(--surface)); }
+.btn[data-variant="outline"] { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn[data-variant="ghost"] { background: transparent; color: var(--text); }
+.btn[data-variant="outline"]:hover, .btn[data-variant="ghost"]:hover { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+.btn[data-variant="destructive"] { background: var(--danger); color: var(--bg); }
+.btn[data-variant="destructive"]:hover { background: color-mix(in srgb, var(--danger) 86%, var(--text)); }
+.btn[data-variant="link"] { height: auto; padding: 0; background: none; color: var(--accent-text); text-decoration: underline; text-underline-offset: 3px; }
+.btn[data-size="sm"] { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn[data-size="lg"] { height: 42px; padding: 0 20px; font-size: 15px; }
+.btn[data-size="icon"] { width: 36px; padding: 0; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border: 1px solid transparent; border-radius: 999px; background: var(--accent); color: var(--accent-contrast);
+  font-size: 12px; font-weight: 600; line-height: 1.5; white-space: nowrap;
+}
+.badge[data-variant="secondary"] { background: color-mix(in srgb, var(--text) 8%, var(--surface)); color: var(--text); }
+.badge[data-variant="outline"] { background: transparent; color: var(--text); border-color: var(--border); }
+.badge[data-variant="destructive"] { background: color-mix(in srgb, var(--danger) 14%, var(--surface)); color: var(--danger); }
+
+.alert {
+  display: grid; gap: 4px; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); font-size: 14px;
+}
+.alert h2, .alert h3 { margin: 0; font-size: 14px; font-weight: 600; }
+.alert p, .alert section { margin: 0; color: var(--text-muted); }
+.alert[data-variant="destructive"] { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); background: color-mix(in srgb, var(--danger) 7%, var(--surface)); color: var(--danger); }
+
+.card {
+  display: flex; flex-direction: column; gap: 16px; padding: 20px 0;
+  border: 1px solid var(--border); border-radius: calc(var(--radius) + 2px);
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow);
+}
+.card > header, .card > section, .card > footer { padding: 0 20px; }
+.card > header { display: grid; gap: 4px; }
+.card > header h2, .card > header h3 { margin: 0; font-size: 16px; font-weight: 600; line-height: 1.3; }
+.card > header p { margin: 0; color: var(--text-muted); font-size: 14px; }
+.card > footer { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+.input {
+  width: 100%; min-height: 36px; padding: 6px 12px; border: 1px solid var(--border); border-radius: calc(var(--radius) - 2px);
+  background: var(--surface); color: var(--text); font-size: 14px;
+}
+textarea.input { min-height: 84px; resize: vertical; }
+.input::placeholder { color: var(--text-muted); }
+.input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent); }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 500; }
+.field [role="alert"] { color: var(--danger); font-size: 13px; }
+
+dialog.dialog {
+  width: min(520px, calc(100vw - 32px)); max-height: calc(100vh - 32px); margin: auto; padding: 0;
+  border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px);
+  background: var(--surface); color: var(--text); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+dialog.dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+dialog.dialog > div { display: grid; gap: 16px; padding: 24px; }
+dialog.dialog header { display: grid; gap: 4px; }
+dialog.dialog header h2 { margin: 0; font-size: 18px; font-weight: 600; }
+dialog.dialog header p { margin: 0; color: var(--text-muted); font-size: 14px; }
+dialog.dialog footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+
+.tabs { display: grid; gap: 12px; }
+.tabs > [role="tablist"] {
+  display: inline-flex; gap: 4px; width: fit-content; max-width: 100%; padding: 4px; overflow-x: auto;
+  border-radius: var(--radius); background: color-mix(in srgb, var(--text) 6%, var(--surface));
+}
+.tabs [role="tab"] {
+  padding: 6px 12px; border: 0; border-radius: calc(var(--radius) - 4px); background: transparent;
+  color: var(--text-muted); font-size: 14px; font-weight: 500; white-space: nowrap; cursor: pointer;
+}
+.tabs [role="tab"][aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.tabs [role="tabpanel"][hidden] { display: none; }
+
+.accordion > details { border-bottom: 1px solid var(--border); }
+.accordion > details > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 0; font-weight: 500; list-style: none; cursor: pointer;
+}
+.accordion > details > summary::-webkit-details-marker { display: none; }
+.accordion > details > summary::after { content: "+"; color: var(--text-muted); font-size: 18px; line-height: 1; }
+.accordion > details[open] > summary::after { content: "\2212"; }
+.accordion > details > :not(summary) { margin: 0 0 14px; color: var(--text-muted); }
+
+.toaster {
+  position: fixed; right: 16px; bottom: 16px; z-index: 50; display: flex; flex-direction: column-reverse; gap: 8px;
+  width: min(360px, calc(100vw - 32px)); pointer-events: none;
+}
+.toaster .toast { pointer-events: auto; transition: opacity 200ms ease, transform 200ms ease; }
+.toaster .toast[aria-hidden="true"] { opacity: 0; transform: translateY(8px); }
+.toaster .toast-content {
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--surface); color: var(--text); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); font-size: 13px;
+}
+.toaster .toast-content h2 { margin: 0 0 2px; font-size: 14px; font-weight: 600; }
+.toaster .toast-content p { margin: 0; color: var(--text-muted); }
+
+/* skipUI building blocks. */
+.skip-table-search { max-width: 320px; margin-bottom: 12px; }
+.skip-table-wrap { overflow-x: auto; }
+table.shell-table th[data-sort] { cursor: pointer; user-select: none; }
+table.shell-table th[aria-sort="ascending"]::after { content: " \25B2"; font-size: 9px; }
+table.shell-table th[aria-sort="descending"]::after { content: " \25BC"; font-size: 9px; }
+table.shell-table td.skip-table-empty { color: var(--text-muted); text-align: center; padding: 24px 0; }
+.skip-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; font-size: 13px; color: var(--text-muted); }
+.toaster .toast[data-type="success"] .toast-content { border-left: 3px solid var(--success); }
+.toaster .toast[data-type="error"] .toast-content { border-left: 3px solid var(--danger); }
+
+</style>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); },
+    compact: function (v) { return new Intl.NumberFormat("pt-BR", { notation: "compact", maximumFractionDigits: 1 }).format(v); },
+    brlCompact: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL", notation: "compact", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisLabels formats the five y-axis ticks in the unit the chart declared
+  // (percent, BRL or plain numbers), compact so long values never clip, with
+  // the fewest decimals that still print every tick exactly (1,5 mi, not 2 mi).
+  function axisLabels(format, ticks) {
+    function at(digits) {
+      var opts = { notation: "compact", maximumFractionDigits: digits };
+      if (format === "pct") opts = { style: "percent", maximumFractionDigits: digits };
+      else if (format === "brl") opts = { style: "currency", currency: "BRL", notation: "compact", maximumFractionDigits: digits };
+      var nf = new Intl.NumberFormat("pt-BR", opts);
+      return ticks.map(function (t) { return nf.format(t); });
+    }
+    for (var digits = 0; digits < 2; digits++) {
+      if (at(digits).join("|") === at(digits + 1).join("|")) return at(digits);
+    }
+    return at(2);
+  }
+
+  // yAxisPad formats the ticks and measures the left padding they need from
+  // the longest one; drawYAxis then draws the grid and the labels.
+  function yAxisPad(format, max) {
+    var labels = axisLabels(format, [0, max / 4, max / 2, (max * 3) / 4, max]);
+    var longest = labels.reduce(function (m, l) { return Math.max(m, l.length); }, 0);
+    return { labels: labels, padL: Math.max(40, Math.round(longest * 6.2) + 14) };
+  }
+  function drawYAxis(svg, axis, W, padR, padT, plotH) {
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: axis.padL, y1: gy, x2: W - padR, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: axis.padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axis.labels[g];
+      svg.appendChild(lbl);
+    }
+  }
+
+  // xLabelStep: show every k-th category label so labels never overlap, and
+  // always the last one (counted back from the end).
+  function xLabelStep(labels, step) {
+    var longest = labels.reduce(function (m, l) { return Math.max(m, String(l).length); }, 0);
+    return Math.max(1, Math.ceil((longest * 6.4 + 8) / Math.max(step, 1)));
+  }
+  function drawXLabel(svg, text, x, y, W, edgeGuard) {
+    var anchor = "middle";
+    var half = String(text).length * 3.2;
+    if (edgeGuard && x - half < 4) anchor = "start";
+    if (edgeGuard && x + half > W - 4) anchor = "end";
+    var tx = svgEl("text", { x: x, y: y, "text-anchor": anchor, "font-size": 11, fill: mutedColor() });
+    tx.textContent = text;
+    svg.appendChild(tx);
+  }
+  // categoryLines fits a bar's category name in its slot: one line, two lines
+  // split at a space, or cut with "…". A bar without its name can't be read, so
+  // categories are never skipped; null when the slot is too narrow for that.
+  function categoryLines(text, slot) {
+    var fit = Math.floor((slot - 6) / 6.4);
+    var s = String(text);
+    if (fit < 4) return null;
+    if (s.length <= fit) return [s];
+    var cut = function (t) { return t.length <= fit ? t : t.slice(0, fit - 1).trimEnd() + "…"; };
+    var best = -1;
+    for (var i = 0; i < s.length; i++) {
+      if (s[i] === " " && (best < 0 || Math.abs(s.length / 2 - i) < Math.abs(s.length / 2 - best))) best = i;
+    }
+    if (best < 0) return [cut(s)];
+    return [cut(s.slice(0, best)), cut(s.slice(best + 1))];
+  }
+  function legend(el, items) {
+    var box = document.createElement("div");
+    box.className = "chart-legend";
+    items.forEach(function (it) {
+      var row = document.createElement("span");
+      var dot = document.createElement("i");
+      dot.style.background = it.color;
+      row.appendChild(dot);
+      row.appendChild(document.createTextNode((it.label || "") + (it.value ? " " : "")));
+      if (it.value) {
+        var v = document.createElement("b");
+        v.textContent = it.value;
+        row.appendChild(v);
+      }
+      box.appendChild(row);
+    });
+    resolve(el).appendChild(box);
+  }
+  var seriesPalette = ["#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4", "#0ea5b7"];
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  // A page's function may return nothing or throw: the chart prints its
+  // number instead of taking the rest of the page script down with it.
+  function coerceFormat(spec) {
+    if (typeof spec === "function") {
+      return function (v) {
+        try {
+          var out = spec(v);
+          return out == null ? "" : String(out);
+        } catch (e) {
+          return fmt.num(v);
+        }
+      };
+    }
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el = resolve(el);
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  // finite reads a chart value as a number, 0 when it is not one (NaN,
+  // Infinity, a stray string), so one bad value cannot blank the axis.
+  function finite(v) {
+    var n = +v;
+    return isFinite(n) ? n : 0;
+  }
+
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values.map(finite)) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // labelsFor pads or trims the category names to the n points drawn: pages
+  // pass labels and values of different lengths, and one throw here loses
+  // every section the page renders after the chart.
+  function labelsFor(cfg, n) {
+    var out = [];
+    for (var i = 0; i < n; i++) out.push(cfg.labels && cfg.labels[i] != null ? String(cfg.labels[i]) : "");
+    return out;
+  }
+
+  // niceMax rounds the scale up so the four grid steps land on round values
+  // (1, 1.5, 2, 2.5, 3, 4, 5, 6 or 8 × 10^k) and the tick labels read exactly.
+  function niceMax(max) {
+    var raw = max / 4;
+    var mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    var res = raw / mag;
+    var steps = [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10];
+    var nice = steps.filter(function (s) { return s >= res - 1e-9; })[0];
+    return nice * mag * 4;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padB = 30, padT = 12, padR = 12;
+    var max = niceMax(maxOf(cfg.values));
+    var axis = yAxisPad(cfg.format, max);
+    var svg = frame(el, W, H);
+    var n = cfg.values.length;
+    var labels = labelsFor(cfg, n);
+    var plotW = W - axis.padL - padR;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var names = labels.map(function (l) { return categoryLines(l, step); });
+    var named = names.every(Boolean);
+    if (named && names.some(function (l) { return l.length > 1; })) padB = 42;
+    var plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    var every = xLabelStep(labels, step);
+    drawYAxis(svg, axis, W, padR, padT, plotH);
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (finite(v) / max) * plotH);
+      var x = axis.padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: (cfg.colors && cfg.colors[i]) || color });
+      var t = svgEl("title", {});
+      t.textContent = labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      if (named) {
+        names[i].forEach(function (text, li) {
+          drawXLabel(svg, text, x + bw / 2, padT + plotH + 18 + li * 13, W, false);
+        });
+      } else if ((n - 1 - i) % every === 0) {
+        drawXLabel(svg, labels[i], x + bw / 2, H - 10, W, false);
+      }
+    });
+  }
+
+  // line(el, {labels:[], values:[] | series:[{label, values, color?}], color?, format?})
+  // — one line, or several series on one scale with a legend under the chart.
+  function line(el, cfg) {
+    var W = 640, H = 280, padB = 30, padT = 12, padR = 16;
+    var series = cfg.series && cfg.series.length
+      ? cfg.series
+      : [{ label: "", values: cfg.values || [], color: cfg.color }];
+    var all = [];
+    series.forEach(function (s) { all = all.concat(s.values || []); });
+    var max = niceMax(maxOf(all));
+    var axis = yAxisPad(cfg.format, max);
+    var svg = frame(el, W, H);
+    var n = series.reduce(function (m, s) { return Math.max(m, (s.values || []).length); }, 0);
+    var labels = labelsFor(cfg, n);
+    var plotW = W - axis.padL - padR, plotH = H - padT - padB;
+    var f = coerceFormat(cfg.format);
+    drawYAxis(svg, axis, W, padR, padT, plotH);
+    var xs = labels.map(function (_, i) { return axis.padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1)); });
+    var every = xLabelStep(labels, n > 1 ? plotW / (n - 1) : plotW);
+    labels.forEach(function (label, i) {
+      if ((n - 1 - i) % every === 0) drawXLabel(svg, label, xs[i], H - 10, W, true);
+    });
+    var colors = series.map(function (s, si) {
+      return s.color || (si === 0 ? (cfg.color || accent()) : seriesPalette[(si - 1) % seriesPalette.length]);
+    });
+    series.forEach(function (s, si) {
+      var color = colors[si];
+      var pts = (s.values || []).map(function (v, i) { return [xs[i], padT + plotH - (finite(v) / max) * plotH]; });
+      var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+      svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+      pts.forEach(function (p, i) {
+        var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+        var t = svgEl("title", {});
+        t.textContent = (s.label ? s.label + " · " : "") + labels[i] + ": " + f(s.values[i]);
+        c.appendChild(t);
+        svg.appendChild(c);
+      });
+    });
+    if (series.length > 1) {
+      legend(el, series.map(function (s, si) { return { label: s.label, color: colors[si] }; }));
+    }
+  }
+
+  // donut(el, {labels:[], values:[], colors?, format?, center?, centerLabel?, legend?})
+  // — donut with a short total in the centre (compact, in the declared unit)
+  // and, with legend: true, the labels and shares listed under it.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    // At 100% of a wide container the donut outgrows the height pages give
+    // the box and spills over the next section: keep it at its own size.
+    svg.style.maxWidth = W + "px";
+    svg.style.margin = "0 auto";
+    var values = cfg.values.map(finite);
+    var labels = labelsFor(cfg, values.length);
+    var sum = values.reduce(function (a, b) { return a + b; }, 0);
+    var total = sum || 1;
+    var palette = cfg.colors || [accent()].concat(seriesPalette);
+    // The hover keeps the full value; the centre has room for a short one.
+    var full = coerceFormat(cfg.format);
+    var short = typeof cfg.format === "function" ? full : cfg.format === "brl" ? fmt.brlCompact : fmt.compact;
+    var a0 = -Math.PI / 2;
+    values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = labels[i] + ": " + full(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    // A share chart has no total worth printing: without its own centre text
+    // the caption alone takes the middle.
+    var text = cfg.center != null ? String(cfg.center) : (cfg.format === "pct" ? "" : short(sum));
+    if (text) {
+      var size = text.length > 9 ? 14 : text.length > 7 ? 17 : 20;
+      var center = svgEl("text", { x: cx, y: cfg.centerLabel ? cy + 1 : cy + 6, "text-anchor": "middle", "font-size": size, "font-weight": 650, fill: "currentColor" });
+      center.textContent = text;
+      svg.appendChild(center);
+    }
+    if (cfg.centerLabel) {
+      var cap = svgEl("text", { x: cx, y: text ? cy + 19 : cy + 5, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      cap.textContent = cfg.centerLabel;
+      svg.appendChild(cap);
+    }
+    if (cfg.legend) {
+      legend(el, labels.map(function (label, i) {
+        return { label: label, color: palette[i % palette.length], value: fmt.pct(values[i] / total) };
+      }));
+    }
+  }
+
+  // ---- Page building blocks: what dashboards and small systems kept
+  // re-implementing — a searchable sortable table, a KPI row, tabs, toasts,
+  // dialogs, saved state and mock data. Every call is opt-in, so a page that
+  // brings its own versions keeps them.
+
+  function resolve(target) {
+    return typeof target === "string" ? document.querySelector(target) : target;
+  }
+
+  function node(tag, className, text) {
+    var el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text != null) el.textContent = text;
+    return el;
+  }
+
+  function isNumberColumn(col) {
+    return col.align === "right" || col.format === "num" || col.format === "brl" || col.format === "pct";
+  }
+
+  function cellText(col, row) {
+    var value = row[col.key];
+    if (value == null) return "";
+    return col.format ? coerceFormat(col.format)(value) : String(value);
+  }
+
+  function compareValues(a, b) {
+    if (typeof a === "number" && typeof b === "number") return a - b;
+    return String(a == null ? "" : a).localeCompare(String(b == null ? "" : b), "pt-BR", { numeric: true });
+  }
+
+  // table(el, {columns, rows, search?, pageSize?, empty?, onRowClick?}) — a
+  // table.shell-table with sortable headers, an optional search box and
+  // pager. A column is {key, label, format?, align?, sortable? (true),
+  // render?(value, row) returning a Node or an HTML string — the page writes
+  // its cell templates as markup}. Plain values are always set as text.
+  // Returns {setRows, rows}.
+  function table(target, cfg) {
+    var root = resolve(target);
+    var cols = cfg.columns || [];
+    var pageSize = cfg.pageSize || 0;
+    var state = { rows: (cfg.rows || []).slice(), query: "", key: null, dir: 1, page: 0 };
+    root.innerHTML = "";
+    if (cfg.search) {
+      var search = node("input", "input skip-table-search");
+      search.type = "search";
+      search.placeholder = typeof cfg.search === "string" ? cfg.search : "Buscar…";
+      search.setAttribute("aria-label", search.placeholder);
+      search.addEventListener("input", function () {
+        state.query = search.value.trim().toLowerCase();
+        state.page = 0;
+        draw();
+      });
+      root.appendChild(search);
+    }
+    var tableEl = node("table", "shell-table");
+    var headRow = node("tr");
+    var heads = cols.map(function (col) {
+      var th = node("th", isNumberColumn(col) ? "num" : "", col.label == null ? col.key : col.label);
+      th.scope = "col";
+      if (col.sortable !== false) {
+        var toggle = function () {
+          state.dir = state.key === col.key ? -state.dir : 1;
+          state.key = col.key;
+          draw();
+        };
+        th.setAttribute("data-sort", col.key);
+        th.tabIndex = 0;
+        th.addEventListener("click", toggle);
+        th.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+        });
+      }
+      headRow.appendChild(th);
+      return th;
+    });
+    var thead = node("thead");
+    var tbody = node("tbody");
+    var wrap = node("div", "skip-table-wrap");
+    var pager = node("div", "skip-pager");
+    thead.appendChild(headRow);
+    tableEl.appendChild(thead);
+    tableEl.appendChild(tbody);
+    wrap.appendChild(tableEl);
+    root.appendChild(wrap);
+    if (pageSize) root.appendChild(pager);
+
+    function visibleRows() {
+      var rows = state.rows;
+      if (state.query) {
+        rows = rows.filter(function (row) {
+          return cols.some(function (col) { return cellText(col, row).toLowerCase().indexOf(state.query) >= 0; });
+        });
+      }
+      if (state.key) {
+        var key = state.key, dir = state.dir;
+        rows = rows.slice().sort(function (a, b) { return dir * compareValues(a[key], b[key]); });
+      }
+      return rows;
+    }
+
+    function drawRow(row) {
+      var tr = node("tr");
+      cols.forEach(function (col) {
+        var td = node("td", isNumberColumn(col) ? "num" : "");
+        if (!col.render) {
+          td.textContent = cellText(col, row);
+        } else {
+          var content = col.render(row[col.key], row);
+          if (content instanceof Node) td.appendChild(content);
+          else td.innerHTML = content == null ? "" : String(content);
+        }
+        tr.appendChild(td);
+      });
+      // The row stays a row (no role) and takes focus, so a keyboard reaches
+      // the same action; keys pressed on a control inside a cell are its own.
+      if (cfg.onRowClick) {
+        tr.style.cursor = "pointer";
+        tr.tabIndex = 0;
+        tr.addEventListener("click", function () { cfg.onRowClick(row); });
+        tr.addEventListener("keydown", function (e) {
+          if (e.target !== tr || (e.key !== "Enter" && e.key !== " ")) return;
+          e.preventDefault();
+          cfg.onRowClick(row);
+        });
+      }
+      return tr;
+    }
+
+    function pagerButton(label, disabled, step) {
+      var button = node("button", "btn", label);
+      button.type = "button";
+      button.setAttribute("data-variant", "outline");
+      button.setAttribute("data-size", "sm");
+      button.disabled = disabled;
+      button.addEventListener("click", function () { state.page += step; draw(); });
+      return button;
+    }
+
+    function draw() {
+      var rows = visibleRows();
+      heads.forEach(function (th, i) {
+        if (cols[i].key === state.key) th.setAttribute("aria-sort", state.dir > 0 ? "ascending" : "descending");
+        else th.removeAttribute("aria-sort");
+      });
+      var pages = pageSize ? Math.max(1, Math.ceil(rows.length / pageSize)) : 1;
+      state.page = Math.min(state.page, pages - 1);
+      var shown = pageSize ? rows.slice(state.page * pageSize, (state.page + 1) * pageSize) : rows;
+      tbody.innerHTML = "";
+      if (!shown.length) {
+        var empty = node("td", "skip-table-empty", cfg.empty || "Nenhum registro encontrado.");
+        empty.colSpan = cols.length;
+        tbody.appendChild(node("tr")).appendChild(empty);
+      }
+      shown.forEach(function (row) { tbody.appendChild(drawRow(row)); });
+      if (!pageSize) return;
+      pager.innerHTML = "";
+      var from = rows.length ? state.page * pageSize + 1 : 0;
+      pager.appendChild(node("span", "", from + "–" + Math.min(rows.length, (state.page + 1) * pageSize) + " de " + rows.length));
+      var nav = node("div", "row gap-2");
+      nav.appendChild(pagerButton("Anterior", state.page === 0, -1));
+      nav.appendChild(pagerButton("Próxima", state.page >= pages - 1, 1));
+      pager.appendChild(nav);
+    }
+
+    draw();
+    return {
+      setRows: function (rows) { state.rows = rows.slice(); draw(); },
+      rows: visibleRows
+    };
+  }
+
+  // kpis(el, [{label, value, format?, delta?, hint?}]) — KPI cards in a
+  // responsive grid; delta is a fraction (0.12 renders as ▲ 12%).
+  function kpis(target, items) {
+    var root = resolve(target);
+    root.innerHTML = "";
+    root.classList.add("shell-grid");
+    items.forEach(function (item) {
+      var card = node("div", "panel kpi");
+      card.appendChild(node("span", "kpi-label", item.label));
+      // Large money values go compact ("R$ 27,5 mi"): the full amount does
+      // not fit a KPI card at four per row.
+      var kpiFormat = item.format === "brl" && Math.abs(item.value) >= 1e6 ? fmt.brlCompact : (item.format ? coerceFormat(item.format) : null);
+      card.appendChild(node("span", "kpi-value", kpiFormat ? kpiFormat(item.value) : String(item.value)));
+      if (typeof item.delta === "number") {
+        var up = item.delta >= 0;
+        card.appendChild(node("span", "kpi-delta " + (up ? "up" : "down"), (up ? "▲ " : "▼ ") + fmt.pct(Math.abs(item.delta))));
+      }
+      if (item.hint) card.appendChild(node("span", "kpi-label", item.hint));
+      root.appendChild(card);
+    });
+  }
+
+  // badge(text, variant?) — a .badge node for table cells and lists;
+  // variant is "secondary" | "outline" | "destructive" (default: primary).
+  function badge(text, variant) {
+    var el = node("span", "badge", text);
+    if (variant) el.setAttribute("data-variant", variant);
+    return el;
+  }
+
+  // tabs(el) — wires one .tabs block: [role=tab] buttons inside
+  // [role=tablist], each with aria-controls naming its [role=tabpanel].
+  function tabs(target) {
+    var root = resolve(target);
+    var buttons = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+    function select(chosen) {
+      buttons.forEach(function (b) {
+        var on = b === chosen;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(b.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
+      });
+    }
+    buttons.forEach(function (b, i) {
+      b.addEventListener("click", function () { select(b); });
+      b.addEventListener("keydown", function (e) {
+        var step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!step) return;
+        var next = buttons[(i + step + buttons.length) % buttons.length];
+        next.focus();
+        select(next);
+      });
+    });
+    select(buttons.filter(function (b) { return b.getAttribute("aria-selected") === "true"; })[0] || buttons[0]);
+  }
+
+  // toast(message, {type?: "success" | "error", title?, duration?}) — a
+  // .toast in a shared .toaster at the bottom of the page.
+  function toast(message, opts) {
+    opts = opts || {};
+    var toaster = document.querySelector(".toaster") || document.body.appendChild(node("div", "toaster"));
+    var item = node("div", "toast");
+    item.setAttribute("role", opts.type === "error" ? "alert" : "status");
+    item.setAttribute("aria-hidden", "true");
+    if (opts.type) item.setAttribute("data-type", opts.type);
+    var content = node("div", "toast-content");
+    var section = node("section");
+    if (opts.title) section.appendChild(node("h2", "", opts.title));
+    section.appendChild(node("p", "", message));
+    content.appendChild(section);
+    item.appendChild(content);
+    toaster.appendChild(item);
+    requestAnimationFrame(function () { item.setAttribute("aria-hidden", "false"); });
+    setTimeout(function () {
+      item.setAttribute("aria-hidden", "true");
+      setTimeout(function () { item.remove(); }, 400);
+    }, opts.duration || 3000);
+  }
+
+  // Dialogs are native <dialog class="dialog">: a [data-dialog-open="id"]
+  // anywhere opens one, a [data-dialog-close] inside closes it, and a click on
+  // its backdrop closes it too. Plain dialog.showModal()/close() still work.
+  document.addEventListener("click", function (e) {
+    var target = e.target;
+    if (!(target instanceof Element)) return;
+    var opener = target.closest("[data-dialog-open]");
+    if (opener) {
+      var dialog = document.getElementById(opener.getAttribute("data-dialog-open"));
+      if (dialog && dialog.showModal && !dialog.open) dialog.showModal();
+      return;
+    }
+    var closer = target.closest("[data-dialog-close]");
+    if (closer && closer.closest("dialog")) {
+      closer.closest("dialog").close();
+      return;
+    }
+    if (target.tagName === "DIALOG" && target.classList.contains("dialog") && target.open) target.close();
+  });
+
+  // store(key, fallback) — JSON state in localStorage that never throws (a
+  // private window or a full quota falls back to memory): {get, set, update}.
+  function store(key, fallback) {
+    var memory;
+    // Set while the last write did not reach localStorage: what is stored
+    // there is older than memory until a write goes through again.
+    var unsaved = false;
+    var initial = function () { return fallback === undefined ? undefined : JSON.parse(JSON.stringify(fallback)); };
+    function get() {
+      if (!unsaved) {
+        try {
+          var raw = localStorage.getItem(key);
+          if (raw != null) return JSON.parse(raw);
+        } catch (e) { /* storage unavailable: memory below */ }
+      }
+      return memory !== undefined ? memory : initial();
+    }
+    function set(value) {
+      memory = value;
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+        unsaved = false;
+      } catch (e) {
+        unsaved = true;
+      }
+      return value;
+    }
+    return { get: get, set: set, update: function (fn) { return set(fn(get())); } };
+  }
+
+  // mock — seeded random data, so a page asks for 90 days of numbers in one
+  // line instead of writing them out; the same seed gives the same data.
+  var FIRST = ["Ana", "Bruno", "Carla", "Diego", "Eduarda", "Felipe", "Gabriela", "Henrique", "Isabela", "João",
+    "Larissa", "Marcos", "Natália", "Otávio", "Paula", "Rafael", "Sofia", "Thiago", "Vanessa", "Lucas"];
+  var LAST = ["Silva", "Santos", "Oliveira", "Souza", "Pereira", "Costa", "Rodrigues", "Almeida", "Nascimento", "Lima",
+    "Araújo", "Fernandes", "Carvalho", "Gomes", "Martins", "Rocha", "Ribeiro", "Barbosa"];
+  var INITIALS = "ABCDEFGHIJLMNOPRSTV".split("");
+  var CITIES = ["São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", "Curitiba, PR", "Porto Alegre, RS",
+    "Salvador, BA", "Recife, PE", "Fortaleza, CE", "Brasília, DF", "Goiânia, GO", "Campinas, SP", "Florianópolis, SC",
+    "Manaus, AM", "Belém, PA", "Vitória, ES", "Natal, RN"];
+
+  function createMock(seed) {
+    var state = seed >>> 0;
+    var names = 0;
+    function random() {
+      state = (state + 0x6d2b79f5) >>> 0;
+      var t = state;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+    function int(min, max) { return min + Math.floor(random() * (max - min + 1)); }
+    function pick(list) { return list[Math.floor(random() * list.length)]; }
+    var mock = {
+      seed: function (value) { state = value >>> 0; names = 0; return mock; },
+      random: random,
+      int: int,
+      float: function (min, max, decimals) {
+        var factor = Math.pow(10, decimals == null ? 2 : decimals);
+        return Math.round((min + random() * (max - min)) * factor) / factor;
+      },
+      pick: pick,
+      chance: function (p) { return random() < p; },
+      // There are 360 first/last pairs. A page that draws until the name is
+      // new (do { … } while (used.has(name))) froze the tab past them, so
+      // later draws widen the space: a second surname after 200 (6,480), a
+      // middle initial after 4,000.
+      name: function () {
+        names++;
+        var middle = names > 4000 ? pick(INITIALS) + ". " : "";
+        return pick(FIRST) + " " + middle + (names > 200 ? pick(LAST) + " " : "") + pick(LAST);
+      },
+      city: function () { return pick(CITIES); },
+      // series(n, {start, trend, noise, min, decimals}) — a walk: each value
+      // moves by trend (fraction per step) plus up to ±noise of itself.
+      series: function (n, opts) {
+        opts = opts || {};
+        var value = opts.start == null ? 100 : opts.start;
+        var factor = Math.pow(10, opts.decimals || 0);
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          out.push(Math.max(opts.min == null ? 0 : opts.min, Math.round(value * factor) / factor));
+          value = value * (1 + (opts.trend || 0)) * (1 + (random() * 2 - 1) * (opts.noise == null ? 0.08 : opts.noise));
+        }
+        return out;
+      },
+      // dates(n, {end?, step?: "day" | "week" | "month"}) — ISO dates
+      // (YYYY-MM-DD), oldest first, ending at end (default: today).
+      dates: function (n, opts) {
+        opts = opts || {};
+        var end = opts.end ? new Date(opts.end) : new Date();
+        var out = [];
+        for (var i = n - 1; i >= 0; i--) {
+          var d = new Date(end.getTime());
+          if (opts.step === "month") d.setMonth(d.getMonth() - i);
+          else d.setDate(d.getDate() - i * (opts.step === "week" ? 7 : 1));
+          out.push(d.toISOString().slice(0, 10));
+        }
+        return out;
+      },
+      // rows(n, spec) — n objects; each spec value is a function(i), a list
+      // to pick from, or a constant.
+      rows: function (n, spec) {
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          var row = {};
+          for (var key in spec) {
+            var value = spec[key];
+            row[key] = typeof value === "function" ? value(i) : Array.isArray(value) ? pick(value) : value;
+          }
+          out.push(row);
+        }
+        return out;
+      }
+    };
+    return mock;
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+  window.skipUI = { table: table, kpis: kpis, badge: badge, tabs: tabs, toast: toast };
+  window.skipStore = store;
+  window.skipMock = createMock(20261022);
+})();
+
+</script>
+<script>
+/* Ativa o modo com animações: sem esta classe o conteúdo fica visível (progressive enhancement) */
+document.documentElement.classList.add('js-anim');
+</script>
+<style>
+/* Garante que a seção do cardápio tenha altura e fallback visível mesmo se o JS falhar */
+#cardapio { min-height: 240px; }
+#lista-burgers { min-height: 120px; }
+#lista-burgers:empty::before {
+content: "Carregando cardápio...";
+display: block;
+padding: var(--esp-5);
+color: var(--cor-offwhite-muted);
+text-align: center;
+}
+</style>
+<style>
+/* =========================================================
+   CAMADA 2 — CSS com custom properties
+   Paleta: preto profundo, âmbar, vermelho queimado, off-white
+   ========================================================= */
+:root {
+--cor-preto: #0B0A08;
+--cor-preto-2: #151310;
+--cor-preto-3: #1F1C17;
+--cor-ambar: #F2A93B;
+--cor-vermelho: #B33A22;
+--cor-offwhite: #F5EFE3;
+--cor-offwhite-muted: #CFC6B4;
+
+--accent: #F2A93B;
+--accent-text: #F2A93B;
+--accent-contrast: #0B0A08;
+
+--fonte-titulo: 'Anton', 'Archivo Black', Impact, sans-serif;
+--fonte-corpo: 'Barlow', 'Inter', system-ui, sans-serif;
+
+--esp-1: 4px;
+--esp-2: 8px;
+--esp-3: 12px;
+--esp-4: 16px;
+--esp-5: 24px;
+--esp-6: 32px;
+--esp-7: 48px;
+--esp-8: 72px;
+
+--raio: 6px;
+--transicao: 0.3s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+
+body {
+margin: 0;
+font-family: var(--fonte-corpo);
+font-size: 1.05rem;
+line-height: 1.6;
+color: var(--cor-offwhite);
+background-color: var(--cor-preto);
+position: relative;
+min-height: 100vh;
+}
+
+/* Textura granulada (noise em CSS) sobre toda a página */
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+pointer-events: none;
+z-index: 0;
+opacity: 0.09;
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Glow âmbar de luz de esquina */
+body::after {
+content: "";
+position: fixed;
+top: -20vh;
+right: -20vw;
+width: 70vw;
+height: 70vw;
+max-width: 900px;
+max-height: 900px;
+pointer-events: none;
+z-index: 0;
+background: radial-gradient(circle, rgba(242,169,59,0.16) 0%, rgba(242,169,59,0) 65%);
+}
+
+main, header, footer, section { position: relative; z-index: 1; }
+
+img { max-width: 100%; display: block; }
+
+a { color: var(--cor-ambar); }
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+outline: 3px solid var(--cor-ambar);
+outline-offset: 3px;
+}
+
+h1, h2, h3, h4 {
+font-family: var(--fonte-titulo);
+font-weight: 400;
+text-transform: uppercase;
+letter-spacing: 0.02em;
+line-height: 1.05;
+margin: 0;
+color: var(--cor-offwhite);
+}
+
+p { margin: 0 0 var(--esp-4); }
+
+.container {
+width: min(1200px, 100% - 2 * var(--esp-5));
+margin-inline: auto;
+}
+
+.skip-link {
+position: absolute;
+left: var(--esp-4);
+top: -60px;
+background: var(--cor-ambar);
+color: var(--cor-preto);
+padding: var(--esp-2) var(--esp-4);
+border-radius: var(--raio);
+font-weight: 700;
+z-index: 100;
+text-decoration: none;
+}
+.skip-link:focus { top: var(--esp-4); }
+.sr-only {
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
+}
+
+/* ---------- Botões ---------- */
+.btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: var(--esp-2);
+font-family: var(--fonte-corpo);
+font-weight: 700;
+font-size: 1rem;
+letter-spacing: 0.04em;
+text-transform: uppercase;
+text-decoration: none;
+padding: 14px 24px;
+border-radius: var(--raio);
+border: 2px solid transparent;
+cursor: pointer;
+transition: transform var(--transicao), background var(--transicao), color var(--transicao), box-shadow var(--transicao);
+min-height: 48px;
+}
+.btn-primario {
+background: var(--cor-ambar);
+color: var(--cor-preto);
+box-shadow: 0 6px 0 #a8701d, 0 14px 30px rgba(242,169,59,0.25);
+}
+.btn-primario:hover { transform: translateY(-2px); background: #ffbc55; }
+.btn-primario:active { transform: translateY(4px); box-shadow: 0 2px 0 #a8701d; }
+.btn-secundario {
+background: transparent;
+color: var(--cor-offwhite);
+border-color: var(--cor-offwhite);
+}
+.btn-secundario:hover { background: var(--cor-offwhite); color: var(--cor-preto); }
+.btn-vermelho {
+background: var(--cor-vermelho);
+color: var(--cor-offwhite);
+}
+.btn-vermelho:hover { background: #c94a30; }
+
+/* ---------- Header ---------- */
+.site-header {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 50;
+background: rgba(11,10,8,0.92);
+backdrop-filter: blur(8px);
+border-bottom: 1px solid rgba(242,169,59,0.22);
+}
+.header-inner {
+display: flex;
+align-items: center;
+justify-content: space-between;
+height: 72px;
+gap: var(--esp-4);
+}
+.logo {
+font-family: var(--fonte-titulo);
+font-size: 1.5rem;
+color: var(--cor-offwhite);
+text-decoration: none;
+letter-spacing: 0.03em;
+display: inline-flex;
+align-items: center;
+gap: var(--esp-2);
+}
+.logo-selo {
+display: inline-grid;
+place-items: center;
+width: 38px;
+height: 38px;
+border-radius: 50%;
+background: var(--cor-ambar);
+color: var(--cor-preto);
+font-size: 1.1rem;
+box-shadow: 0 0 0 3px var(--cor-preto), 0 0 0 5px var(--cor-ambar);
+}
+.logo span.destaque { color: var(--cor-ambar); }
+
+.nav-principal { display: none; }
+.nav-principal ul {
+list-style: none;
+margin: 0;
+padding: 0;
+display: flex;
+gap: var(--esp-5);
+}
+.nav-principal a {
+color: var(--cor-offwhite);
+text-decoration: none;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+font-size: 0.9rem;
+padding: var(--esp-1) 0;
+border-bottom: 2px solid transparent;
+transition: border-color var(--transicao), color var(--transicao);
+}
+.nav-principal a:hover { color: var(--cor-ambar); border-bottom-color: var(--cor-ambar); }
+
+.header-acoes { display: flex; align-items: center; gap: var(--esp-3); }
+.btn-whats-header { padding: 10px 16px; min-height: 42px; font-size: 0.85rem; }
+
+.menu-toggle {
+display: inline-flex;
+flex-direction: column;
+justify-content: center;
+gap: 5px;
+width: 44px;
+height: 44px;
+background: transparent;
+border: 2px solid var(--cor-ambar);
+border-radius: var(--raio);
+cursor: pointer;
+padding: 0;
+align-items: center;
+}
+.menu-toggle span {
+display: block;
+width: 20px;
+height: 2px;
+background: var(--cor-offwhite);
+transition: transform var(--transicao), opacity var(--transicao);
+}
+.menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-toggle:focus-visible { outline: 3px solid var(--cor-ambar); outline-offset: 3px; }
+
+/* ===== CSS DO MENU MOBILE =====
+   Painel em tela cheia com transform/opacity apenas (nunca height/top/left/margin).
+   visibility:hidden remove o painel fechado da ordem de tabulação. */
+.nav-mobile {
+position: fixed;
+inset: 0;
+height: 100vh;
+height: 100dvh;
+z-index: 60;
+background: var(--cor-preto);
+padding: 96px var(--esp-5) var(--esp-6);
+overflow-y: auto;
+display: block;
+opacity: 0;
+transform: translateY(-8px);
+visibility: hidden;
+pointer-events: none;
+transition:
+opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+visibility 0s linear 300ms;
+}
+/* Textura granulada sutil dentro do painel */
+.nav-mobile::before {
+content: "";
+position: absolute;
+inset: 0;
+pointer-events: none;
+opacity: 0.08;
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+}
+/* will-change só enquanto aberto: mantém a camada promovida apenas durante a animação */
+.nav-mobile.aberto { will-change: transform, opacity; }
+.nav-mobile.aberto {
+opacity: 1;
+transform: translateY(0);
+visibility: visible;
+pointer-events: auto;
+transition:
+opacity 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1),
+visibility 0s linear 0s;
+}
+.nav-mobile ul { list-style: none; margin: 0; padding: 0; position: relative; z-index: 1; }
+.nav-mobile li { border-bottom: 1px solid rgba(242,169,59,0.18); }
+.nav-mobile li span.num {
+font-family: var(--fonte-corpo);
+font-size: 0.85rem;
+font-weight: 700;
+color: var(--cor-ambar);
+letter-spacing: 0.1em;
+min-width: 2.2ch;
+}
+/* Links: alvo de toque 44px+, tipografia condensada com clamp */
+.nav-mobile a {
+display: flex;
+align-items: center;
+gap: var(--esp-3);
+min-height: 44px;
+padding: var(--esp-4) 0;
+color: var(--cor-offwhite);
+text-decoration: none;
+font-family: var(--fonte-titulo);
+font-size: clamp(2rem, 8vw, 3rem);
+text-transform: uppercase;
+line-height: 1;
+opacity: 0;
+transform: translateY(12px);
+transition:
+opacity 400ms cubic-bezier(0.22, 0.61, 0.36, 1),
+transform 400ms cubic-bezier(0.22, 0.61, 0.36, 1),
+color var(--transicao);
+/* Stagger de 70ms por link, via --i */
+transition-delay: calc(var(--i, 0) * 70ms);
+}
+.nav-mobile.aberto a { opacity: 1; transform: translateY(0); }
+.nav-mobile a:hover, .nav-mobile a:focus-visible,
+.nav-mobile a.is-active { color: var(--cor-ambar); }
+.nav-mobile a.is-active .num { color: var(--cor-offwhite); }
+/* Painel acima do header; hambúrguer mantém z-index maior para fechar */
+.site-header .menu-toggle { position: relative; z-index: 70; }
+/* Bloqueio de scroll do body quando o menu está aberto */
+body.menu-aberto { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+.nav-mobile,
+.nav-mobile.aberto,
+.nav-mobile a { transition: none !important; }
+.nav-mobile a { opacity: 1; transform: none; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+min-height: 100vh;
+display: flex;
+align-items: center;
+padding: 120px 0 var(--esp-7);
+position: relative;
+background:
+linear-gradient(180deg, rgba(11,10,8,0.2) 0%, rgba(11,10,8,0.85) 80%, var(--cor-preto) 100%),
+radial-gradient(ellipse at 70% 30%, rgba(179,58,34,0.35) 0%, transparent 60%),
+linear-gradient(135deg, #2a1a0c 0%, #0B0A08 100%);
+}
+.hero-grid {
+display: grid;
+gap: var(--esp-6);
+align-items: center;
+}
+.eyebrow {
+display: inline-block;
+background: rgba(242,169,59,0.14);
+color: var(--cor-ambar);
+border: 1px solid var(--cor-ambar);
+border-radius: 999px;
+padding: 6px 14px;
+font-weight: 700;
+font-size: 0.8rem;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+margin-bottom: var(--esp-4);
+}
+.hero h1 {
+font-size: clamp(3.4rem, 10vw, 7rem);
+line-height: 0.95;
+margin-bottom: var(--esp-4);
+}
+.hero h1 .amarelo { color: var(--cor-ambar); }
+.hero-tagline {
+font-family: var(--fonte-titulo);
+font-size: clamp(1.4rem, 3vw, 2rem);
+text-transform: uppercase;
+color: var(--cor-offwhite);
+margin-bottom: var(--esp-4);
+letter-spacing: 0.02em;
+}
+.hero-sub {
+font-size: 1.15rem;
+color: var(--cor-offwhite-muted);
+max-width: 52ch;
+margin-bottom: var(--esp-6);
+}
+.hero-ctas { display: flex; flex-wrap: wrap; gap: var(--esp-3); margin-bottom: var(--esp-5); }
+.hero-selo-ifood {
+display: inline-flex;
+align-items: center;
+gap: var(--esp-3);
+background: var(--cor-preto-2);
+border: 1px solid rgba(242,169,59,0.4);
+border-radius: var(--raio);
+padding: var(--esp-3) var(--esp-4);
+}
+.hero-selo-ifood strong {
+font-family: var(--fonte-titulo);
+font-size: 1.8rem;
+color: var(--cor-ambar);
+line-height: 1;
+}
+.hero-selo-ifood small { display: block; color: var(--cor-offwhite-muted); font-size: 0.85rem; }
+
+.hero-visual {
+position: relative;
+aspect-ratio: 4 / 5;
+border-radius: var(--raio);
+overflow: hidden;
+border: 2px solid var(--cor-ambar);
+box-shadow: 14px 14px 0 var(--cor-vermelho);
+background: linear-gradient(160deg, #3a2412 0%, #B33A22 55%, #F2A93B 100%);
+}
+.hero-visual::after {
+content: "";
+position: absolute;
+inset: 0;
+background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.18), transparent 50%);
+}
+.hero-visual-label {
+position: absolute;
+left: var(--esp-4);
+bottom: var(--esp-4);
+right: var(--esp-4);
+z-index: 2;
+background: rgba(11,10,8,0.85);
+padding: var(--esp-3) var(--esp-4);
+border-radius: var(--raio);
+font-family: var(--fonte-titulo);
+text-transform: uppercase;
+font-size: 1.3rem;
+}
+/* Foto real do hambúrguer da casa: substituir pela foto oficial (usar alt descritivo) */
+.hero-visual img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+
+/* ---------- Faixa de status ao vivo ---------- */
+.status-faixa {
+background: var(--cor-preto-2);
+border-top: 1px solid rgba(242,169,59,0.25);
+border-bottom: 1px solid rgba(242,169,59,0.25);
+padding: var(--esp-4) 0;
+}
+.status-inner {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content: space-between;
+gap: var(--esp-3);
+}
+.status-badge {
+display: inline-flex;
+align-items: center;
+gap: var(--esp-2);
+font-family: var(--fonte-titulo);
+text-transform: uppercase;
+font-size: 1.35rem;
+padding: 6px 16px;
+border-radius: 999px;
+color: var(--cor-preto);
+background: var(--cor-ambar);
+}
+.status-badge.fechado { background: var(--cor-vermelho); color: var(--cor-offwhite); }
+.status-badge.aberto { background: var(--cor-ambar); color: var(--cor-preto); }
+.status-badge.fechado .status-ponto { animation: none; }
+.status-ponto {
+width: 12px;
+height: 12px;
+border-radius: 50%;
+background: currentColor;
+}
+.status-badge.aberto .status-ponto { animation: pulsar 1.6s infinite; }
+@keyframes pulsar {
+0%, 100% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.35; transform: scale(0.8); }
+}
+.status-proximo { color: var(--cor-offwhite-muted); font-size: 1rem; }
+.status-proximo strong { color: var(--cor-offwhite); }
+
+/* ---------- Seções comuns ---------- */
+.secao {
+padding: var(--esp-8) 0;
+}
+.secao-cabecalho {
+margin-bottom: var(--esp-7);
+max-width: 720px;
+}
+.secao-cabecalho h2 {
+font-size: clamp(2.4rem, 6vw, 4rem);
+margin-bottom: var(--esp-3);
+}
+.secao-cabecalho h2 span { color: var(--cor-ambar); }
+.secao-subtitulo { color: var(--cor-offwhite-muted); font-size: 1.1rem; margin: 0; }
+
+/* ---------- Sobre ---------- */
+.sobre-grid {
+display: grid;
+gap: var(--esp-6);
+}
+.sobre-texto p { font-size: 1.1rem; color: var(--cor-offwhite); }
+.sobre-texto p:first-child::first-letter {
+font-family: var(--fonte-titulo);
+float: left;
+font-size: 4.2rem;
+line-height: 0.85;
+padding: 6px 12px 0 0;
+color: var(--cor-ambar);
+}
+.irmaos {
+display: grid;
+gap: var(--esp-4);
+margin-top: var(--esp-5);
+}
+.irmao-card {
+background: var(--cor-preto-2);
+border-left: 4px solid var(--cor-ambar);
+padding: var(--esp-5);
+border-radius: var(--raio);
+}
+.irmao-card h3 { font-size: 1.6rem; color: var(--cor-ambar); margin-bottom: var(--esp-1); }
+.irmao-card .papel { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cor-offwhite-muted); margin-bottom: var(--esp-2); font-weight: 600; }
+.irmao-card p { margin: 0; color: var(--cor-offwhite-muted); font-size: 1rem; }
+
+.conceito-quadro {
+background: linear-gradient(135deg, var(--cor-vermelho), #7a2414);
+padding: var(--esp-6);
+border-radius: var(--raio);
+color: var(--cor-offwhite);
+box-shadow: 10px 10px 0 var(--cor-ambar);
+}
+.conceito-quadro h3 { font-size: 2.2rem; margin-bottom: var(--esp-3); color: var(--cor-offwhite); }
+.conceito-quadro ul { list-style: none; padding: 0; margin: 0; }
+.conceito-quadro li {
+padding: var(--esp-3) 0;
+border-bottom: 1px dashed rgba(245,239,227,0.4);
+font-weight: 600;
+display: flex;
+gap: var(--esp-3);
+align-items: flex-start;
+}
+.conceito-quadro li:last-child { border-bottom: none; }
+.conceito-quadro li::before { content: "◆"; color: var(--cor-ambar); }
+
+/* ---------- Cardápio ---------- */
+.cardapio-grid {
+display: grid;
+gap: var(--esp-5);
+}
+.filtros-cardapio {
+display: flex;
+flex-wrap: wrap;
+gap: var(--esp-2);
+margin-bottom: var(--esp-6);
+}
+/* Botões de filtro: aria-pressed="true" = ativo. Ativo usa âmbar com texto preto (contraste ~11:1). */
+.filtro-btn {
+font-family: var(--fonte-corpo);
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.06em;
+font-size: 0.9rem;
+padding: 10px 18px;
+min-height: 44px;
+border-radius: 999px;
+border: 2px solid var(--cor-ambar);
+background: transparent;
+color: var(--cor-offwhite);
+cursor: pointer;
+transition: background var(--transicao), color var(--transicao), transform var(--transicao);
+}
+.filtro-btn:hover { background: rgba(242,169,59,0.14); }
+.filtro-btn[aria-pressed="true"] { background: var(--cor-ambar); color: var(--cor-preto); }
+.contagem-filtro { color: var(--cor-offwhite-muted); font-size: 0.95rem; margin: 0 0 var(--esp-4); }
+.burger-card.is-hiding {
+opacity: 0 !important;
+transform: translateY(12px) scale(0.97) !important;
+transition: opacity 200ms ease, transform 200ms ease !important;
+transition-delay: 0ms !important;
+}
+.burger-card.is-entrando { opacity: 0; transform: translateY(24px) scale(0.98); }
+.tag-chip {
+align-self: flex-start;
+font-size: 0.75rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+border-radius: 999px;
+padding: 4px 10px;
+margin-top: auto;
+border: 1px solid transparent;
+}
+/* Pares de cor: âmbar com preto (~11:1); vermelho queimado com off-white (~5.6:1); verde escuro com off-white (~6:1) */
+.tag-mais-pedido { background: var(--cor-ambar); color: var(--cor-preto); }
+.tag-picante { background: var(--cor-vermelho); color: var(--cor-offwhite); }
+.tag-vegetariano { background: #2E6B3F; color: var(--cor-offwhite); }
+.tag-padrao { background: rgba(242,169,59,0.14); color: var(--cor-ambar); border-color: rgba(242,169,59,0.4); }
+.burger-tags { display: flex; flex-wrap: wrap; gap: var(--esp-2); margin-top: auto; }
+.burger-tags .tag-chip { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) {
+.burger-card.is-hiding, .burger-card.is-entrando { transition: none !important; opacity: 1 !important; transform: none !important; }
+.status-badge.aberto .status-ponto { animation: none !important; }
+}
+.burger-card {
+background: var(--cor-preto-2);
+border: 1px solid rgba(242,169,59,0.18);
+border-radius: var(--raio);
+overflow: hidden;
+display: flex;
+flex-direction: column;
+transition: transform var(--transicao), border-color var(--transicao), box-shadow var(--transicao);
+opacity: 0;
+transform: translateY(24px);
+}
+.burger-card.visivel { opacity: 1; transform: translateY(0); }
+.burger-card:hover { transform: translateY(-6px); border-color: var(--cor-ambar); box-shadow: 0 16px 36px rgba(0,0,0,0.5); }
+.burger-foto {
+height: 180px;
+display: grid;
+place-items: center;
+font-size: 3.5rem;
+position: relative;
+/* Placeholder: substituir pela foto real do burger (alt descritivo) */
+}
+.burger-corpo { padding: var(--esp-5); flex: 1; display: flex; flex-direction: column; gap: var(--esp-2); }
+.burger-topo { display: flex; justify-content: space-between; align-items: baseline; gap: var(--esp-3); }
+.burger-nome { font-size: 1.7rem; color: var(--cor-offwhite); }
+.burger-preco { font-family: var(--fonte-titulo); font-size: 1.6rem; color: var(--cor-ambar); white-space: nowrap; }
+.burger-desc { color: var(--cor-offwhite-muted); font-size: 1rem; margin: 0; }
+.burger-tag {
+align-self: flex-start;
+font-size: 0.75rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+background: rgba(242,169,59,0.14);
+color: var(--cor-ambar);
+border-radius: 999px;
+padding: 4px 10px;
+margin-top: auto;
+}
+
+.acomp-grid {
+display: grid;
+gap: var(--esp-5);
+margin-top: var(--esp-7);
+}
+.acomp-bloco {
+background: var(--cor-preto-2);
+border-radius: var(--raio);
+padding: var(--esp-5);
+border-top: 3px solid var(--cor-vermelho);
+}
+.acomp-bloco h3 { font-size: 1.7rem; color: var(--cor-ambar); margin-bottom: var(--esp-3); }
+.acomp-bloco ul { list-style: none; padding: 0; margin: 0; }
+.acomp-bloco li {
+display: flex;
+justify-content: space-between;
+gap: var(--esp-3);
+padding: var(--esp-2) 0;
+border-bottom: 1px dashed rgba(242,169,59,0.22);
+}
+.acomp-bloco li:last-child { border-bottom: none; }
+.acomp-bloco li span:last-child { font-family: var(--fonte-titulo); color: var(--cor-offwhite); white-space: nowrap; }
+.acomp-bloco small { display: block; color: var(--cor-offwhite-muted); font-size: 0.9rem; font-family: var(--fonte-corpo); }
+
+/* ---------- Galeria ---------- */
+.galeria-mosaico {
+display: grid;
+grid-template-columns: 1fr;
+grid-auto-rows: 160px;
+gap: var(--esp-3);
+}
+.galeria-item {
+position: relative;
+border-radius: var(--raio);
+overflow: hidden;
+border: 1px solid rgba(242,169,59,0.25);
+margin: 0;
+}
+.galeria-item.grande { grid-column: span 2; grid-row: span 2; }
+.galeria-item figcaption {
+position: absolute;
+left: 0;
+right: 0;
+bottom: 0;
+padding: var(--esp-3) var(--esp-4);
+background: linear-gradient(to top, rgba(11,10,8,0.95), rgba(11,10,8,0));
+color: var(--cor-offwhite);
+font-weight: 600;
+font-size: 0.95rem;
+}
+/* Placeholders de foto: substituir pelas fotos reais do ambiente e dos burgers */
+.galeria-placeholder { width: 100%; height: 100%; }
+.ph-1 { background: linear-gradient(160deg, #2a1a0c, #B33A22 80%); }
+.ph-2 { background: radial-gradient(circle at 30% 30%, #F2A93B, #6a3412 70%); }
+.ph-3 { background: linear-gradient(200deg, #1F1C17, #F5EFE3 180%); }
+.ph-4 { background: linear-gradient(120deg, #B33A22, #F2A93B); }
+.ph-5 { background: linear-gradient(180deg, #151310, #6a3412); }
+.ph-6 { background: radial-gradient(circle at 70% 70%, #F5EFE3, #B33A22 75%); }
+
+/* ---------- Onde estamos ---------- */
+.onde-grid {
+display: grid;
+gap: var(--esp-6);
+}
+.onde-info { display: flex; flex-direction: column; gap: var(--esp-5); }
+.endereco {
+font-style: normal;
+background: var(--cor-preto-2);
+border-left: 4px solid var(--cor-ambar);
+padding: var(--esp-5);
+border-radius: var(--raio);
+font-size: 1.1rem;
+}
+.endereco strong { font-family: var(--fonte-titulo); font-size: 1.6rem; text-transform: uppercase; font-weight: 400; color: var(--cor-offwhite); display: block; margin-bottom: var(--esp-2); }
+.endereco-ajuda { color: var(--cor-offwhite-muted); font-size: 0.95rem; margin-top: var(--esp-2); }
+.onde-acoes { display: flex; flex-wrap: wrap; gap: var(--esp-3); }
+
+.tabela-horarios {
+width: 100%;
+border-collapse: collapse;
+background: var(--cor-preto-2);
+border-radius: var(--raio);
+overflow: hidden;
+}
+.tabela-horarios caption {
+text-align: left;
+font-family: var(--fonte-titulo);
+font-size: 1.5rem;
+text-transform: uppercase;
+color: var(--cor-ambar);
+padding: var(--esp-4) var(--esp-5) var(--esp-2);
+}
+.tabela-horarios th, .tabela-horarios td {
+text-align: left;
+padding: var(--esp-3) var(--esp-5);
+border-top: 1px solid rgba(242,169,59,0.15);
+font-size: 1rem;
+}
+.tabela-horarios th { font-weight: 600; color: var(--cor-offwhite); }
+.tabela-horarios td { color: var(--cor-offwhite-muted); text-align: right; }
+.tabela-horarios tr.dia-hoje { background: rgba(242,169,59,0.18); }
+.tabela-horarios tr.dia-hoje th, .tabela-horarios tr.dia-hoje td { color: var(--cor-ambar); font-weight: 700; }
+.tabela-horarios .marca-hoje {
+display: inline-block;
+margin-left: var(--esp-2);
+font-size: 0.7rem;
+background: var(--cor-ambar);
+color: var(--cor-preto);
+border-radius: 999px;
+padding: 2px 8px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+font-weight: 700;
+vertical-align: middle;
+}
+.tabela-horarios tr.fechado td { color: #E0866F; }
+
+.mapa-wrap {
+border-radius: var(--raio);
+overflow: hidden;
+border: 2px solid var(--cor-ambar);
+min-height: 340px;
+background: var(--cor-preto-2);
+}
+.mapa-wrap iframe {
+width: 100%;
+height: 100%;
+min-height: 340px;
+border: 0;
+display: block;
+filter: grayscale(0.25) contrast(1.05);
+}
+
+/* ---------- Rodapé ---------- */
+.site-footer {
+background: var(--cor-preto-2);
+border-top: 2px solid var(--cor-vermelho);
+padding: var(--esp-7) 0 var(--esp-5);
+}
+.footer-grid {
+display: grid;
+gap: var(--esp-6);
+}
+.footer-logo { font-family: var(--fonte-titulo); font-size: 2rem; text-transform: uppercase; color: var(--cor-offwhite); margin-bottom: var(--esp-2); }
+.footer-logo span { color: var(--cor-ambar); }
+.footer-lista { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--esp-2); }
+.footer-lista a { color: var(--cor-offwhite); text-decoration: none; font-weight: 600; }
+.footer-lista a:hover, .footer-lista a:focus-visible { color: var(--cor-ambar); text-decoration: underline; }
+.footer-titulo { font-family: var(--fonte-titulo); text-transform: uppercase; color: var(--cor-ambar); font-size: 1.2rem; margin-bottom: var(--esp-3); }
+.footer-base {
+margin-top: var(--esp-6);
+padding-top: var(--esp-4);
+border-top: 1px solid rgba(245,239,227,0.15);
+display: flex;
+flex-wrap: wrap;
+justify-content: space-between;
+gap: var(--esp-3);
+font-size: 0.9rem;
+color: var(--cor-offwhite-muted);
+}
+
+/* =========================================================
+   ANIMAÇÕES DE ENTRADA
+   Elementos só ficam ocultos se <html> tiver .js-anim (progressive
+   enhancement: sem JS o conteúdo continua visível).
+   Animamos apenas transform e opacity, com cubic-bezier suave de ~700ms.
+   ========================================================= */
+.js-anim .reveal,
+.js-anim .burger-card,
+.js-anim .galeria-item,
+.js-anim .tabela-horarios tr,
+.js-anim .nav-principal li,
+.js-anim .nav-mobile li {
+opacity: 0;
+transform: translateY(24px);
+transition:
+opacity 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+transform 700ms cubic-bezier(0.22, 0.61, 0.36, 1),
+border-color var(--transicao),
+box-shadow var(--transicao),
+background-color var(--transicao);
+/* Stagger: --i é definido no JS (índice do item); cada item atrasa 80ms */
+transition-delay: calc(var(--i, 0) * 80ms);
+}
+.js-anim .reveal.is-visible,
+.js-anim .burger-card.is-visible,
+.js-anim .galeria-item.is-visible,
+.js-anim .tabela-horarios tr.is-visible,
+.js-anim .nav-principal li.is-visible,
+.js-anim .nav-mobile li.is-visible {
+opacity: 1;
+transform: translateY(0);
+}
+/* Após a entrada, removemos o delay para que o hover responda na hora */
+.js-anim .burger-card.is-settled { transition-delay: 0ms; }
+
+/* Hero em cascata: roda uma única vez ao carregar */
+@keyframes entrada-cascata {
+from { opacity: 0; transform: translateY(24px); }
+to { opacity: 1; transform: translateY(0); }
+}
+.js-anim .hero .cascata {
+opacity: 0;
+animation: entrada-cascata 800ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+animation-delay: calc(var(--d, 0) * 1ms);
+}
+
+/* =========================================================
+   ANIMAÇÕES CONTÍNUAS
+   Grão animado via translate3d em passos discretos (steps),
+   brilho do CTA via pseudo-elemento com blur e scale sutil.
+   ========================================================= */
+.hero::before {
+content: "";
+position: absolute;
+inset: -50%;
+pointer-events: none;
+z-index: 0;
+opacity: 0.06;
+background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");
+/* Animamos apenas transform (translate3d), nunca background-position */
+will-change: transform;
+animation: grao 8s steps(8) infinite;
+}
+@keyframes grao {
+0% { transform: translate3d(0, 0, 0); }
+25% { transform: translate3d(-4%, 3%, 0); }
+50% { transform: translate3d(3%, -5%, 0); }
+75% { transform: translate3d(-2%, 4%, 0); }
+100% { transform: translate3d(0, 0, 0); }
+}
+.hero > .container { position: relative; z-index: 1; }
+
+/* Brilho pulsante no CTA principal: glow em ::after (opacity + scale) */
+.hero .btn-primario { position: relative; isolation: isolate; }
+.hero .btn-primario::after {
+content: "";
+position: absolute;
+inset: -6px;
+border-radius: calc(var(--raio) + 6px);
+background: var(--cor-ambar);
+filter: blur(14px);
+opacity: 0.35;
+z-index: -1;
+animation: brilho-cta 2.6s ease-in-out infinite;
+}
+@keyframes brilho-cta {
+0%, 100% { opacity: 0.25; transform: scale(1); }
+50% { opacity: 0.55; transform: scale(1.03); }
+}
+
+/* Hover e foco-visível nos cards de burger: elevação, sombra e preço rotacionado */
+.burger-card:hover,
+.burger-card:focus-within,
+.burger-card:has(:focus-visible) {
+transform: translateY(-6px);
+border-color: var(--cor-ambar);
+box-shadow: 0 18px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(242,169,59,0.5);
+}
+.burger-preco {
+display: inline-block;
+transition: transform 200ms ease;
+}
+.burger-card:hover .burger-preco,
+.burger-card:focus-within .burger-preco,
+.burger-card:has(:focus-visible) .burger-preco {
+transform: rotate(-3deg) scale(1.05);
+}
+
+/* =========================================================
+   ANIMAÇÕES DE SCROLL
+   Parallax (transform, máx. 15%), header com estado .is-scrolled,
+   e underline do menu com scaleX.
+   ========================================================= */
+.hero-visual { will-change: transform; }
+.hero-visual-inner { will-change: transform; }
+
+.site-header {
+transition: background-color 300ms ease, box-shadow 300ms ease, backdrop-filter 300ms ease;
+}
+.site-header.is-scrolled {
+background: rgba(11,10,8,0.97);
+backdrop-filter: blur(14px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.site-header.is-scrolled .header-inner { height: 60px; }
+.header-inner { transition: height 300ms ease; }
+.site-header.is-scrolled .logo-selo { transform: scale(0.85); }
+.logo-selo { transition: transform 300ms ease; }
+
+/* Underline animado da seção ativa: scaleX em vez de width */
+.nav-principal a { position: relative; border-bottom: none; }
+.nav-principal a::after {
+content: "";
+position: absolute;
+left: 0;
+right: 0;
+bottom: -4px;
+height: 2px;
+background: var(--cor-ambar);
+transform: scaleX(0);
+transform-origin: left center;
+transition: transform 300ms ease;
+}
+.nav-principal a:hover::after,
+.nav-principal a.is-active::after { transform: scaleX(1); }
+.nav-principal a:hover { border-bottom-color: transparent; }
+.nav-principal a.is-active { color: var(--cor-ambar); }
+
+/* Pausa de animações contínuas fora da viewport */
+.is-paused,
+.is-paused::before,
+.is-paused::after,
+.is-paused .btn-primario::after {
+animation-play-state: paused !important;
+}
+
+/* Performance: conteúdo abaixo da dobra só é renderizado ao se aproximar */
+.secao.reveal,
+.status-faixa + .secao,
+.site-footer {
+content-visibility: auto;
+contain-intrinsic-size: auto 900px;
+}
+
+/* =========================================================
+   PERFORMANCE E ACESSIBILIDADE
+   Todas as animações ficam dentro de no-preference; com reduce
+   o conteúdo aparece imediatamente, sem parallax, grão ou pulso.
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+.js-anim .reveal,
+.js-anim .burger-card,
+.js-anim .galeria-item,
+.js-anim .tabela-horarios tr,
+.js-anim .nav-principal li,
+.js-anim .nav-mobile li,
+.js-anim .hero .cascata {
+opacity: 1 !important;
+transform: none !important;
+transition: none !important;
+animation: none !important;
+}
+.hero::before,
+.hero .btn-primario::after,
+.status-badge.aberto .status-ponto {
+animation: none !important;
+}
+.hero-visual { transform: none !important; }
+}
+
+/* =========================================================
+   Responsivo — mobile-first; breakpoints 640 / 900 / 1200
+   ========================================================= */
+@media (min-width: 640px) {
+.menu-toggle { display: none; }
+.nav-mobile { display: none !important; }
+.galeria-mosaico { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 180px; }
+.acomp-grid { grid-template-columns: repeat(3, 1fr); }
+.cardapio-grid { grid-template-columns: repeat(2, 1fr); }
+.irmaos { grid-template-columns: 1fr 1fr; }
+.footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 900px) {
+.nav-principal { display: block; }
+.menu-toggle { display: none; }
+.nav-mobile { display: none !important; }
+.hero-grid { grid-template-columns: 1.1fr 0.9fr; }
+.sobre-grid { grid-template-columns: 1.2fr 1fr; align-items: start; }
+.onde-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+.cardapio-grid { grid-template-columns: repeat(3, 1fr); }
+.galeria-mosaico { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; }
+.footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+@media (min-width: 1200px) {
+.galeria-mosaico { grid-auto-rows: 230px; }
+.hero h1 { font-size: 7.5rem; }
+}
+
+/* =========================================================
+   CSS DO CARRINHO E FORMULÁRIO
+   Layout: no desktop o carrinho é uma coluna sticky à direita;
+   no mobile vira um bottom sheet fixo com altura máxima de 40vh.
+   Animamos o sheet com transform (translateY), nunca height,
+   porque transform roda na GPU e não dispara reflow do layout.
+   ========================================================= */
+.pedido-layout { display: grid; gap: var(--esp-5); align-items: start; }
+.pedido-form-col { min-width: 0; }
+.carrinho {
+background: var(--cor-preto-2);
+border: 1px solid rgba(242,169,59,0.25);
+border-radius: var(--raio);
+display: flex;
+flex-direction: column;
+}
+/* Mobile: fixo na base, com altura máxima de 40vh e corpo rolável */
+.carrinho-sheet {
+position: fixed;
+left: 0;
+right: 0;
+bottom: 0;
+z-index: 45;
+max-height: 40vh;
+border-radius: var(--raio) var(--raio) 0 0;
+box-shadow: 0 -10px 30px rgba(0,0,0,0.55);
+transform: translateY(calc(100% - 64px));
+transition: transform 300ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.carrinho-sheet.aberto { transform: translateY(0); }
+.carrinho-cabecalho {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: var(--esp-3);
+padding: var(--esp-3) var(--esp-4);
+min-height: 64px;
+width: 100%;
+background: transparent;
+border: 0;
+color: var(--cor-offwhite);
+font: inherit;
+text-align: left;
+cursor: pointer;
+}
+.carrinho-titulo {
+font-family: var(--fonte-titulo);
+text-transform: uppercase;
+font-size: 1.4rem;
+color: var(--cor-offwhite);
+}
+.carrinho-total-topo { font-family: var(--fonte-titulo); font-size: 1.3rem; color: var(--cor-ambar); }
+.carrinho-seta { display: inline-block; transition: transform 300ms ease; color: var(--cor-ambar); }
+.carrinho-sheet.aberto .carrinho-seta { transform: rotate(180deg); }
+.carrinho-corpo {
+overflow-y: auto;
+padding: 0 var(--esp-4) var(--esp-4);
+flex: 1;
+min-height: 0;
+}
+.carrinho-vazio { color: var(--cor-offwhite-muted); margin: var(--esp-3) 0; }
+.carrinho-lista { list-style: none; margin: 0; padding: 0; }
+.carrinho-item {
+padding: var(--esp-3) 0;
+border-bottom: 1px dashed rgba(242,169,59,0.22);
+display: grid;
+gap: var(--esp-2);
+}
+.carrinho-item-topo { display: flex; justify-content: space-between; gap: var(--esp-3); align-items: baseline; }
+.carrinho-item-nome { font-weight: 600; color: var(--cor-offwhite); }
+.carrinho-item-subtotal { font-family: var(--fonte-titulo); color: var(--cor-offwhite); white-space: nowrap; }
+.carrinho-item-preco { font-size: 0.9rem; color: var(--cor-offwhite-muted); }
+.carrinho-item-linha { display: flex; justify-content: space-between; align-items: center; gap: var(--esp-3); flex-wrap: wrap; }
+.carrinho-item-obs { width: 100%; }
+/* font-size 16px em todos os campos: iOS dá zoom automático abaixo disso */
+.input-campo {
+width: 100%;
+font: inherit;
+font-size: 16px;
+color: var(--cor-offwhite);
+background: var(--cor-preto);
+border: 1px solid rgba(242,169,59,0.4);
+border-radius: var(--raio);
+padding: 12px 14px;
+min-height: 44px;
+}
+.input-campo::placeholder { color: #9d9482; }
+.input-campo:focus-visible { outline: 3px solid var(--cor-ambar); outline-offset: 2px; }
+.input-campo[aria-invalid="true"] { border-color: #ff8a73; }
+.input-campo:disabled { opacity: 0.5; cursor: not-allowed; }
+.qtd-controle { display: inline-flex; align-items: center; gap: var(--esp-2); }
+.qtd-btn {
+min-width: 44px;
+min-height: 44px;
+border-radius: var(--raio);
+border: 2px solid var(--cor-ambar);
+background: transparent;
+color: var(--cor-offwhite);
+font: inherit;
+font-size: 1.3rem;
+font-weight: 700;
+cursor: pointer;
+transition: background var(--transicao), color var(--transicao);
+}
+.qtd-btn:hover { background: rgba(242,169,59,0.18); }
+.qtd-valor { min-width: 2ch; text-align: center; font-weight: 700; color: var(--cor-offwhite); }
+.btn-adicionar {
+margin-top: auto;
+min-height: 44px;
+width: 100%;
+}
+.card-qtd { margin-top: auto; }
+.carrinho-rodape { padding: var(--esp-4); border-top: 1px solid rgba(242,169,59,0.2); }
+.carrinho-total-linha { display: flex; justify-content: space-between; font-family: var(--fonte-titulo); font-size: 1.5rem; color: var(--cor-offwhite); margin-bottom: var(--esp-3); }
+.carrinho-total-linha span:last-child { color: var(--cor-ambar); }
+.contador-itens { color: var(--cor-offwhite-muted); font-size: 0.95rem; margin: 0 0 var(--esp-2); }
+.form-pedido { display: grid; gap: var(--esp-4); }
+.form-pedido fieldset {
+border: 1px solid rgba(242,169,59,0.25);
+border-radius: var(--raio);
+padding: var(--esp-4);
+margin: 0;
+min-width: 0;
+background: var(--cor-preto-2);
+}
+.form-pedido legend {
+font-family: var(--fonte-titulo);
+text-transform: uppercase;
+font-size: 1.3rem;
+color: var(--cor-ambar);
+padding: 0 var(--esp-2);
+}
+.campo { display: grid; gap: 6px; margin-bottom: var(--esp-3); }
+.campo label { font-weight: 600; color: var(--cor-offwhite); }
+.campo-opcional { color: var(--cor-offwhite-muted); font-weight: 400; font-size: 0.9rem; }
+.campo-erro { color: #ff8a73; font-size: 0.95rem; font-weight: 600; min-height: 0; }
+.campo-erro:empty { display: none; }
+.campos-linha { display: grid; gap: var(--esp-3); }
+.segmentado { display: grid; grid-template-columns: 1fr 1fr; gap: var(--esp-2); }
+.segmentado input { position: absolute; opacity: 0; pointer-events: none; }
+.segmentado label {
+display: flex;
+align-items: center;
+justify-content: center;
+min-height: 48px;
+padding: 10px 12px;
+border: 2px solid var(--cor-ambar);
+border-radius: var(--raio);
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+cursor: pointer;
+color: var(--cor-offwhite);
+text-align: center;
+transition: background var(--transicao), color var(--transicao);
+}
+.segmentado input:checked + label { background: var(--cor-ambar); color: var(--cor-preto); }
+.segmentado input:focus-visible + label { outline: 3px solid var(--cor-ambar); outline-offset: 3px; }
+.ajuda-campo { color: var(--cor-offwhite-muted); font-size: 0.95rem; margin: 0; }
+.alerta-pedido {
+background: rgba(179,58,34,0.2);
+border: 1px solid #ff8a73;
+color: var(--cor-offwhite);
+padding: var(--esp-3) var(--esp-4);
+border-radius: var(--raio);
+font-weight: 600;
+}
+.alerta-pedido:empty { display: none; }
+.btn-enviar { width: 100%; min-height: 56px; font-size: 1.1rem; }
+@media (min-width: 900px) {
+.pedido-layout { grid-template-columns: 1.2fr 0.8fr; }
+.carrinho-sheet {
+position: sticky;
+top: 96px;
+bottom: auto;
+transform: none;
+max-height: none;
+border-radius: var(--raio);
+box-shadow: none;
+}
+.carrinho-cabecalho { display: none; }
+.carrinho-corpo { max-height: calc(100vh - 260px); }
+.carrinho-sheet .carrinho-corpo { padding-top: var(--esp-4); }
+.campos-linha { grid-template-columns: 2fr 1fr; }
+.campos-linha.campos-bairro { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 899px) {
+/* Espaço no fim da página para o sheet não cobrir o botão de enviar */
+body { padding-bottom: 64px; }
+}
+.form-pedido .btn-enviar { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) {
+.carrinho-sheet, .carrinho-seta { transition: none !important; }
+}
+
+/* Respeita preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+*, *::before, *::after {
+animation-duration: 0.01ms !important;
+animation-iteration-count: 1 !important;
+transition-duration: 0.01ms !important;
+scroll-behavior: auto !important;
+}
+.reveal, .burger-card { opacity: 1; transform: none; }
+}
+
+/* =========================================================
+   === AJUSTES MOBILE — REVISÃO ===
+   ========================================================= */
+
+/* 1) ÁREA DE TOQUE MÍNIMA 44x44px
+   44x44px é o mínimo recomendado pelo WCAG 2.2 (critério 2.5.8 Target Size)
+   e pelas Human Interface Guidelines da Apple. Os botões já ocupavam 44px
+   em vários casos (hambúrguer, qtd, filtros); aqui fechamos as lacunas. */
+.nav-principal a,
+.footer-lista a,
+.logo,
+.btn,
+.filtro-btn,
+.qtd-btn,
+.btn-adicionar,
+.carrinho-cabecalho,
+.menu-toggle,
+.btn-enviar {
+min-height: 44px;
+min-width: 44px;
+}
+.footer-lista a,
+.nav-principal a {
+display: inline-flex;
+align-items: center;
+min-height: 44px;
+}
+.btn-whats-header { min-height: 44px; }
+
+/* 2) GALERIA RESPONSIVA
+   1 coluna abaixo de 640px, 2 colunas entre 640 e 900px, mosaico original acima.
+   aspect-ratio e width/height garantem que os slots não gerem CLS nem overflow. */
+.galeria-item { width: 100%; aspect-ratio: 4 / 3; }
+.galeria-item.grande { grid-column: auto; grid-row: auto; }
+@media (min-width: 640px) and (max-width: 899px) {
+.galeria-mosaico { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+.galeria-item.grande { grid-column: span 2; grid-row: span 2; }
+}
+@media (min-width: 900px) {
+.galeria-item { aspect-ratio: auto; }
+}
+
+/* 3) HOVER SOMENTE EM DISPOSITIVOS COM HOVER
+   Em telas de toque o :hover "gruda" após o tap e o elemento fica preso no
+   estado de hover. Por isso os :hover ficam dentro de (hover: hover) and (pointer: fine).
+   Os :focus-visible permanecem fora, valendo para qualquer dispositivo. */
+@media (hover: hover) and (pointer: fine) {
+.btn-primario:hover { transform: translateY(-2px); background: #ffbc55; }
+.btn-secundario:hover { background: var(--cor-offwhite); color: var(--cor-preto); }
+.btn-vermelho:hover { background: #c94a30; }
+.nav-principal a:hover { color: var(--cor-ambar); border-bottom-color: var(--cor-ambar); }
+.nav-mobile a:hover { color: var(--cor-ambar); }
+.filtro-btn:hover { background: rgba(242,169,59,0.14); }
+.burger-card:hover { transform: translateY(-6px); border-color: var(--cor-ambar); box-shadow: 0 16px 36px rgba(0,0,0,0.5); }
+.burger-card:hover,
+.burger-card:focus-within,
+.burger-card:has(:focus-visible) {
+transform: translateY(-6px);
+border-color: var(--cor-ambar);
+box-shadow: 0 18px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(242,169,59,0.5);
+}
+.burger-card:hover .burger-preco,
+.burger-card:focus-within .burger-preco,
+.burger-card:has(:focus-visible) .burger-preco {
+transform: rotate(-3deg) scale(1.05);
+}
+.qtd-btn:hover { background: rgba(242,169,59,0.18); }
+.footer-lista a:hover { color: var(--cor-ambar); text-decoration: underline; }
+.nav-principal a:hover::after { transform: scaleX(1); }
+}
+/* Feedback de toque no mobile: :active sutil no card em vez de hover */
+@media (hover: none), (pointer: coarse) {
+.burger-card:active { transform: scale(0.98); }
+}
+
+/* 4) TIPOGRAFIA FLUIDA COM clamp()
+   clamp() elimina media queries para tipografia e evita saltos bruscos entre
+   breakpoints. Mínimos escolhidos para não quebrar em 320px. */
+.hero h1 { font-size: clamp(2rem, 8vw, 4.5rem); }
+@media (min-width: 1200px) { .hero h1 { font-size: clamp(2rem, 8vw, 7.5rem); } }
+.secao-cabecalho h2 { font-size: clamp(1.5rem, 5vw, 2.75rem); }
+.burger-nome,
+.irmao-card h3,
+.acomp-bloco h3 { font-size: clamp(1.05rem, 3.5vw, 1.35rem); }
+.burger-preco,
+.acomp-bloco li span:last-child { font-size: clamp(1rem, 3vw, 1.25rem); }
+.carrinho-titulo { font-size: clamp(1.1rem, 4vw, 1.4rem); }
+body { font-size: clamp(0.95rem, 2.5vw, 1.05rem); }
+.burger-desc, .secao-subtitulo { overflow-wrap: anywhere; }
+
+/* 5) ZERO SCROLL HORIZONTAL
+   overflow-x:hidden é REDE DE SEGURANÇA, não solução: pode mascarar bugs.
+   O correto é não ter elementos que estourem. Testar em 320, 360, 390, 414 e 768px. */
+html, body { overflow-x: hidden; }
+img, video, iframe, svg { max-width: 100%; }
+.mapa-wrap iframe { width: 100%; max-width: 100%; }
+.tabela-horarios { display: block; overflow-x: auto; }
+.tabela-horarios th, .tabela-horarios td { white-space: nowrap; }
+.nav-mobile { max-width: 100vw; }
+.carrinho-sheet { max-width: 100vw; }
+.form-pedido fieldset, .campo, .input-campo { min-width: 0; max-width: 100%; }
+
+/* 6) DESATIVAR PARALLAX E TEXTURA ANIMADA ABAIXO DE 640px
+   Parallax em telas pequenas consome bateria e causa jank sem impacto visual perceptível.
+   O grão continua visível (textura estática); só a animação é desligada. */
+@media (max-width: 639px) {
+.hero-visual { transform: none !important; }
+.hero::before { animation: none !important; }
+.hero .btn-primario::after { animation-play-state: paused; }
+}
+
+/* 7) INPUTS COM FONT-SIZE MÍNIMO DE 16px
+   iOS Safari dá zoom automático ao focar campos com font-size < 16px, desalinhando a página.
+   .input-campo já tinha 16px; textarea, select e os campos do carrinho herdavam o tamanho do corpo. */
+input, select, textarea,
+.input-campo, .segmentado label { font-size: 16px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- =========================================================
+     CAMADA 1 — HTML semântico
+     ========================================================= -->
+
+<header class="site-header" id="topo">
+<div class="container header-inner">
+<a href="#topo" class="logo" aria-label="Do Zé Burguer, voltar ao topo">
+<span class="logo-selo" aria-hidden="true">Z</span>
+<span>DO ZÉ <span class="destaque">BURGUER</span></span>
+</a>
+
+<!-- Navegação principal (desktop). Os links são âncoras para as seções. -->
+<nav class="nav-principal" aria-label="Navegação principal">
+<ul>
+<li><a href="#sobre" data-secao="sobre">Sobre</a></li>
+<li><a href="#cardapio" data-secao="cardapio">Cardápio</a></li>
+<li><a href="#galeria" data-secao="galeria">Galeria</a></li>
+<li><a href="#onde-estamos" data-secao="onde-estamos">Onde estamos</a></li>
+</ul>
+</nav>
+
+<div class="header-acoes">
+<!-- Número real do WhatsApp: (11) 97221-7312 -->
+<a class="btn btn-primario btn-whats-header" href="https://wa.me/5511972217312?text=Oi!%20Quero%20fazer%20um%20pedido%20no%20Do%20Z%C3%A9%20Burguer." target="_blank" rel="noopener">WhatsApp</a>
+<button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-mobile" id="btn-menu">
+<span></span><span></span><span></span>
+</button>
+</div>
+</div>
+
+<!-- Painel do menu mobile: role=dialog + aria-modal, nomeado pelo título sr-only -->
+<div class="nav-mobile" id="nav-mobile" role="dialog" aria-modal="true" aria-labelledby="titulo-menu-mobile" aria-hidden="true">
+<h2 id="titulo-menu-mobile" class="sr-only">Menu de navegação</h2>
+<ul>
+<li><a href="#sobre" data-secao="sobre" style="--i:0"><span class="num" aria-hidden="true">01</span>Sobre</a></li>
+<li><a href="#cardapio" data-secao="cardapio" style="--i:1"><span class="num" aria-hidden="true">02</span>Cardápio</a></li>
+<li><a href="#galeria" data-secao="galeria" style="--i:2"><span class="num" aria-hidden="true">03</span>Galeria</a></li>
+<li><a href="#onde-estamos" data-secao="onde-estamos" style="--i:3"><span class="num" aria-hidden="true">04</span>Onde estamos</a></li>
+</ul>
+</div>
+</header>
+
+<main id="conteudo">
+
+<!-- 2. HERO -->
+<section class="hero" aria-labelledby="titulo-hero">
+<div class="container hero-grid">
+<div>
+<span class="eyebrow cascata" style="--d:0">Hamburgueria artesanal • Campos Elíseos</span>
+<h1 id="titulo-hero" class="cascata" style="--d:0">Mais que <span class="amarelo">uma esquina.</span></h1>
+<p class="hero-tagline cascata" style="--d:120">Hambúrguer feito na chapa, cerveja gelada e papo sem hora pra acabar.</p>
+<p class="hero-sub cascata" style="--d:240">Na Alameda Ribeiro da Silva, o Do Zé Burguer é ponto de encontro de vizinho, happy hour de colega de trabalho e resenha de amigo de longa data. Dois irmãos, uma chapa quente e um balcão aberto.</p>
+
+<div class="hero-ctas cascata" style="--d:360">
+<!-- Link real do iFood da loja: substituir o href pelo link oficial da página do restaurante -->
+<a class="btn btn-primario" href="#pedido" aria-label="Montar meu pedido e ir até o formulário">Montar meu pedido</a>
+<a class="btn btn-secundario" href="https://www.ifood.com.br/" target="_blank" rel="noopener" aria-label="Pedir pelo iFood (abre em nova aba)">Pedir no iFood</a>
+</div>
+
+<div class="hero-selo-ifood cascata" style="--d:480" role="note" aria-label="Avaliação de 4,9 no iFood">
+<strong aria-hidden="true">4,9</strong>
+<div>
+<span>Nota no iFood</span>
+<small>Pedido mínimo de R$ 10,00</small>
+</div>
+</div>
+</div>
+
+<div class="hero-visual" id="hero-visual" role="img" aria-label="Hambúrguer artesanal empilhado com queijo derretido, em luz âmbar de fim de tarde">
+<!-- Foto real do burger da casa: trocar pela foto oficial. Mantenha o alt descritivo. -->
+<img src="https://img.usecurling.com/p/800/1000?q=gourmet%20burger%20cheese&color=orange" alt="Hambúrguer artesanal empilhado com queijo derretido e pão brioche">
+<div class="hero-visual-label">Zé Clássico • R$ 34,90</div>
+</div>
+</div>
+</section>
+
+<!-- 3. FAIXA DE STATUS AO VIVO -->
+<section class="status-faixa" id="status-faixa" aria-label="Status de funcionamento agora">
+<div class="container status-inner">
+<div class="row gap-3" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+<span class="status-badge" id="status-badge" role="status" aria-live="polite">
+<span class="status-ponto" aria-hidden="true"></span>
+<span id="status-texto">Verificando...</span>
+</span>
+<span class="status-proximo" id="status-proximo">Calculando horário de funcionamento</span>
+</div>
+<span class="status-proximo">Atendimento em São Paulo • horário de Brasília</span>
+</div>
+</section>
+
+<!-- 4. SOBRE -->
+<section class="secao reveal" id="sobre" aria-labelledby="titulo-sobre">
+<div class="container">
+<div class="secao-cabecalho">
+<span class="eyebrow">Nossa história</span>
+<h2 id="titulo-sobre">Duas irmãos, <span>uma esquina.</span></h2>
+<p class="secao-subtitulo">Como uma chapa de ferro velha virou o lugar mais movimentado da quadra.</p>
+</div>
+
+<div class="sobre-grid">
+<div class="sobre-texto">
+<!-- Texto real: substituir pela história verdadeira da casa, se necessário. -->
+<p>O Do Zé Burguer nasceu numa noite de sábado, quando Felipe Carone e Gabriel Variz decidiram transformar a esquina da Alameda Ribeiro da Silva num lugar onde a vizinhança pudesse sentar, pedir um hambúrguer de verdade e ficar até a conversa acabar. O nome é uma homenagem ao pai, o seu Zé, que sempre dizia que comida boa se faz com paciência e com quem você gosta.</p>
+<p>A carne é moída na casa, o pão é de fermentação longa e o cheddar é derretido na chapa na hora. Nada sai pronto de caixa, nada tem pressa. O que tem é cerveja gelada, molho da casa e uma mesa de madeira que já ouviu muita história boa.</p>
+<p>Felipe cuida da cozinha e da chapa. Gabriel cuida do balcão, da música e de cada pessoa que entra pela porta. Juntos, fizeram do Campos Elíseos um endereço de happy hour, aniversário de amigo e resenha de fim de semana. Aqui, a esquina é a sua.</p>
+
+<div class="irmaos">
+<article class="irmao-card">
+<h3>Felipe Carone</h3>
+<p class="papel">Chapeiro e sócio-fundador</p>
+<p>Comanda a chapa desde o primeiro dia e não abre mão de cada detalhe: ponto da carne, crocância do pão e o cheddar no lugar certo.</p>
+</article>
+<article class="irmao-card">
+<h3>Gabriel Variz</h3>
+<p class="papel">Atendimento e sócio-fundador</p>
+<p>É quem recebe você na porta, indica o chopp da semana e garante que ninguém saia da mesa sem ter feito um amigo novo.</p>
+</article>
+</div>
+</div>
+
+<aside class="conceito-quadro" aria-labelledby="titulo-conceito">
+<h3 id="titulo-conceito">O conceito da esquina</h3>
+<ul>
+<li>Ponto de encontro de vizinho e de colega de trabalho</li>
+<li>Happy hour sem frescura e com cerveja gelada</li>
+<li>Hambúrguer artesanal feito na chapa, na hora</li>
+<li>Resenha longa, mesa compartilhada e sem pressa</li>
+</ul>
+</aside>
+</div>
+</div>
+</section>
+
+<!-- 5. CARDÁPIO -->
+<section class="secao reveal" id="cardapio" aria-labelledby="titulo-cardapio" style="background: var(--cor-preto-2);">
+<div class="container">
+<div class="secao-cabecalho">
+<span class="eyebrow">Cardápio</span>
+<h2 id="titulo-cardapio">Hambúrgueres da <span>casa</span></h2>
+<p class="secao-subtitulo">Seis criações da esquina, todas montadas na chapa e servidas com batata rústica.</p>
+</div>
+
+<!-- CARDÁPIO: os cards são renderizados por JS a partir do array CARDAPIO (seção "DADOS DO CARDÁPIO").
+     Cada card recebe o controle de quantidade e o botão "Adicionar" pelo JS. -->
+<div class="filtros-cardapio" role="group" aria-label="Filtrar cardápio por categoria">
+<button type="button" class="filtro-btn" data-filtro="todos" aria-pressed="true">Todos</button>
+<button type="button" class="filtro-btn" data-filtro="burgers" aria-pressed="false">Burgers</button>
+<button type="button" class="filtro-btn" data-filtro="acompanhamentos" aria-pressed="false">Acompanhamentos</button>
+<button type="button" class="filtro-btn" data-filtro="bebidas" aria-pressed="false">Bebidas</button>
+</div>
+<p class="contagem-filtro" id="contagem-filtro" aria-live="polite"></p>
+<div class="cardapio-grid" id="lista-burgers">
+<!-- preenchido via JS -->
+</div>
+</div>
+</section>
+
+<!-- HTML DO FORMULÁRIO DE PEDIDO
+     Carrinho e formulário ficam na mesma seção. Os cards do cardápio acima
+     recebem os botões "Adicionar" via JS (event delegation no container). -->
+<section class="secao reveal" id="pedido" aria-labelledby="titulo-pedido">
+<div class="container">
+<div class="secao-cabecalho">
+<span class="eyebrow">Seu pedido</span>
+<h2 id="titulo-pedido">Monte seu <span>pedido</span></h2>
+<p class="secao-subtitulo">Escolha os itens, confira o total e envie direto pro WhatsApp da esquina.</p>
+</div>
+
+<div class="pedido-layout">
+<div class="pedido-form-col">
+<form class="form-pedido" id="form-pedido" novalidate>
+<fieldset>
+<legend>Como você quer receber?</legend>
+<div class="segmentado">
+<input type="radio" id="tipo-entrega" name="tipo" value="entrega" checked aria-describedby="ajuda-tipo">
+<label for="tipo-entrega">Entrega</label>
+<input type="radio" id="tipo-retirada" name="tipo" value="retirada" aria-describedby="ajuda-tipo">
+<label for="tipo-retirada">Retirada no balcão</label>
+</div>
+<p class="ajuda-campo" id="ajuda-tipo">Entrega no Campos Elíseos e arredores. Retirada no balcão não precisa de endereço.</p>
+</fieldset>
+
+<fieldset>
+<legend>Seus dados</legend>
+<div class="campo">
+<label for="campo-nome">Nome <span aria-hidden="true">*</span></label>
+<input class="input-campo" id="campo-nome" name="name" type="text" autocomplete="name" maxlength="60" required aria-describedby="erro-nome">
+<p class="campo-erro" id="erro-nome" aria-live="off"></p>
+</div>
+<div class="campo">
+<label for="campo-telefone">Telefone / WhatsApp <span class="campo-opcional">(opcional)</span></label>
+<input class="input-campo" id="campo-telefone" name="tel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="(11) 99999-9999">
+</div>
+</fieldset>
+
+<fieldset id="grupo-endereco">
+<legend>Endereço de entrega</legend>
+<div class="campos-linha">
+<div class="campo">
+<label for="campo-rua">Rua / avenida <span aria-hidden="true">*</span></label>
+<input class="input-campo" id="campo-rua" name="address-line1" type="text" autocomplete="address-line1" maxlength="80" aria-describedby="erro-rua">
+<p class="campo-erro" id="erro-rua" aria-live="off"></p>
+</div>
+<div class="campo">
+<label for="campo-numero">Número <span aria-hidden="true">*</span></label>
+<input class="input-campo" id="campo-numero" name="address-number" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" maxlength="8" aria-describedby="erro-numero">
+<p class="campo-erro" id="erro-numero" aria-live="off"></p>
+</div>
+</div>
+<div class="campo">
+<label for="campo-complemento">Complemento <span class="campo-opcional">(opcional)</span></label>
+<input class="input-campo" id="campo-complemento" name="address-line2" type="text" autocomplete="address-line2" maxlength="60">
+</div>
+<div class="campos-linha campos-bairro">
+<div class="campo">
+<label for="campo-bairro">Bairro <span aria-hidden="true">*</span></label>
+<input class="input-campo" id="campo-bairro" name="address-level3" type="text" autocomplete="address-level3" maxlength="60" aria-describedby="erro-bairro">
+<p class="campo-erro" id="erro-bairro" aria-live="off"></p>
+</div>
+<div class="campo">
+<label for="campo-referencia">Ponto de referência <span class="campo-opcional">(opcional)</span></label>
+<input class="input-campo" id="campo-referencia" name="reference" type="text" maxlength="80">
+</div>
+</div>
+</fieldset>
+
+<fieldset>
+<legend>Observações gerais</legend>
+<div class="campo">
+<label for="campo-obs-geral">Algum pedido especial?<span class="campo-opcional"> (opcional)</span></label>
+<textarea class="input-campo" id="campo-obs-geral" name="obs" rows="3" maxlength="160" placeholder="Ex: trazer talheres extras"></textarea>
+</div>
+</fieldset>
+
+<div class="alerta-pedido" id="alerta-pedido" role="alert" aria-live="assertive"></div>
+<button type="submit" class="btn btn-primario btn-enviar" id="btn-enviar">Enviar pedido no WhatsApp</button>
+</form>
+</div>
+
+<aside class="carrinho carrinho-sheet" id="carrinho" aria-labelledby="titulo-carrinho">
+<button type="button" class="carrinho-cabecalho" id="carrinho-toggle" aria-expanded="false" aria-controls="carrinho-corpo">
+<span class="carrinho-titulo" id="titulo-carrinho">Seu carrinho</span>
+<span class="carrinho-total-topo" id="total-topo">R$ 0,00</span>
+<span class="carrinho-seta" aria-hidden="true">▲</span>
+</button>
+<div class="carrinho-corpo" id="carrinho-corpo">
+<p class="contador-itens" id="contador-itens" aria-live="polite"></p>
+<p class="carrinho-vazio" id="carrinho-vazio">Seu carrinho está vazio. Escolha um item no cardápio.</p>
+<ul class="carrinho-lista" id="carrinho-lista"></ul>
+</div>
+<div class="carrinho-rodape">
+<div class="carrinho-total-linha"><span>Total</span><span id="total-carrinho" aria-live="polite">R$ 0,00</span></div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+
+<!-- 6. GALERIA -->
+<section class="secao reveal" id="galeria" aria-labelledby="titulo-galeria">
+<div class="container">
+<div class="secao-cabecalho">
+<span class="eyebrow">Galeria</span>
+<h2 id="titulo-galeria">Um pouco da <span>esquina</span></h2>
+<p class="secao-subtitulo">Burgers na chapa, mesas cheias e a luz âmbar que você encontra só aqui.</p>
+</div>
+
+<!-- FOTOS: os itens abaixo são placeholders com gradientes da paleta.
+     Trocar pelas fotos reais do ambiente e dos burgers (mantenha os alt descritivos). -->
+<div class="galeria-mosaico">
+<figure class="galeria-item grande">
+<div class="galeria-placeholder ph-1" role="img" aria-label="Fachada da hamburgueria à noite com luz âmbar"></div>
+<figcaption>Fachada da esquina à noite</figcaption>
+</figure>
+<figure class="galeria-item">
+<div class="galeria-placeholder ph-2" role="img" aria-label="Hambúrguer duplo com queijo derretido sobre a chapa"></div>
+<figcaption>Duplo Esquina na chapa</figcaption>
+</figure>
+<figure class="galeria-item">
+<div class="galeria-placeholder ph-3" role="img" aria-label="Mesa de madeira com chopp e batata rústica"></div>
+<figcaption>Chopp e batata rústica</figcaption>
+</figure>
+<figure class="galeria-item">
+<div class="galeria-placeholder ph-4" role="img" aria-label="Balcão do Gabriel com luzes quentes"></div>
+<figcaption>O balcão do Gabriel</figcaption>
+</figure>
+<figure class="galeria-item">
+<div class="galeria-placeholder ph-5" role="img" aria-label="Chapa do Felipe com hambúrgueres dourados"></div>
+<figcaption>A chapa do Felipe</figcaption>
+</figure>
+<figure class="galeria-item">
+<div class="galeria-placeholder ph-6" role="img" aria-label="Variz Bacon cortado ao meio mostrando o recheio"></div>
+<figcaption>Variz Bacon por dentro</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<!-- 7. ONDE ESTAMOS -->
+<section class="secao reveal" id="onde-estamos" aria-labelledby="titulo-onde" style="background: var(--cor-preto-2);">
+<div class="container">
+<div class="secao-cabecalho">
+<span class="eyebrow">Onde estamos</span>
+<h2 id="titulo-onde">Venha pra <span>esquina</span></h2>
+<p class="secao-subtitulo">A gente fica no Campos Elíseos, perto do centro, com mesa pra grupo e espaço pra quem chega sozinho.</p>
+</div>
+
+<div class="onde-grid">
+<div class="onde-info">
+<address class="endereco">
+<strong>Do Zé Burguer</strong>
+<!-- Endereço real: confirmar número e complemento se houver -->
+Alameda Ribeiro da Silva, 89<br>
+Campos Elíseos, São Paulo/SP<br>
+<span class="endereco-ajuda">Ponto de referência: a esquina com a rua do lado, de fachada escura e luz âmbar na porta.</span>
+</address>
+
+<div class="onde-acoes">
+<a class="btn btn-primario" href="https://www.google.com/maps/dir/?api=1&destination=Alameda+Ribeiro+da+Silva+89+Campos+Eliseos+Sao+Paulo" target="_blank" rel="noopener">Como chegar</a>
+<a class="btn btn-secundario" href="https://wa.me/5511972217312?text=Oi!%20Vou%20passar%20por%20a%20esquina%2C%20tem%20mesa%3F" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+</div>
+
+<table class="tabela-horarios" id="tabela-horarios">
+<caption>Horário de funcionamento</caption>
+<tbody>
+<tr data-dia="1" class="fechado"><th scope="row">Segunda-feira</th><td>Fechado</td></tr>
+<tr data-dia="2" class="fechado"><th scope="row">Terça-feira</th><td>Fechado</td></tr>
+<tr data-dia="3"><th scope="row">Quarta-feira</th><td>18h às 23h</td></tr>
+<tr data-dia="4"><th scope="row">Quinta-feira</th><td>18h às 23h</td></tr>
+<tr data-dia="5"><th scope="row">Sexta-feira</th><td>18h à 00h</td></tr>
+<tr data-dia="6"><th scope="row">Sábado</th><td>18h à 00h</td></tr>
+<tr data-dia="0"><th scope="row">Domingo</th><td>18h às 22h</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="mapa-wrap">
+<!-- Mapa real: iframe do Google Maps com o endereço da casa -->
+<iframe
+title="Mapa com a localização do Do Zé Burguer na Alameda Ribeiro da Silva, 89, Campos Elíseos, São Paulo"
+src="https://www.google.com/maps?q=Alameda+Ribeiro+da+Silva,+89,+Campos+Eliseos,+Sao+Paulo&output=embed"
+loading="lazy"
+referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+
+<!-- 8. RODAPÉ -->
+<footer class="site-footer">
+<div class="container">
+<div class="footer-grid">
+<div>
+<p class="footer-logo">DO ZÉ <span>BURGUER</span></p>
+<p class="secao-subtitulo">Hambúrguer artesanal de esquina no Campos Elíseos. Mais que uma esquina.</p>
+</div>
+<div>
+<h3 class="footer-titulo">Contato</h3>
+<ul class="footer-lista">
+<li><a href="https://wa.me/5511972217312" target="_blank" rel="noopener">WhatsApp (11) 97221-7312</a></li>
+<li><a href="https://www.instagram.com/doze.burguer" target="_blank" rel="noopener">Instagram @doze.burguer</a></li>
+<li><a href="https://www.ifood.com.br/" target="_blank" rel="noopener">Peça pelo iFood</a></li>
+</ul>
+</div>
+<div>
+<h3 class="footer-titulo">Visite</h3>
+<ul class="footer-lista">
+<li><a href="#sobre">Sobre</a></li>
+<li><a href="#cardapio">Cardápio</a></li>
+<li><a href="#galeria">Galeria</a></li>
+<li><a href="#onde-estamos">Onde estamos</a></li>
+</ul>
+</div>
+</div>
+<div class="footer-base">
+<span>© <span id="ano-atual">2025</span> Do Zé Burguer • Felipe Carone e Gabriel Variz</span>
+<span>Feito com chapa quente e paciência na Alameda Ribeiro da Silva, 89.</span>
+</div>
+</div>
+</footer>
+
+<!-- =========================================================
+     CAMADA 3 — JavaScript puro (horário, menu, scroll, reveal)
+     ========================================================= -->
+<script>
+(function () {
+'use strict';
+
+/* =========================================================
+   JS — ESTADO DO CARRINHO
+   Estado em memória: objeto indexado por id do item, cada valor com
+   { item, qtd, obs }. Não usamos localStorage por decisão de privacidade
+   e simplicidade (o pedido some ao recarregar). Para persistir, basta
+   salvar ESTADO_CARRINHO em localStorage em cada mutação e restaurar no load.
+   ========================================================= */
+var ESTADO_CARRINHO = {};
+var OBS_MAX = 120;
+
+function itemPorId(id) {
+for (var i = 0; i < CARDAPIO.length; i++) {
+if (CARDAPIO[i].id === id) return CARDAPIO[i];
+}
+return null;
+}
+
+function quantidadeTotal() {
+return Object.keys(ESTADO_CARRINHO).reduce(function (soma, id) {
+return soma + ESTADO_CARRINHO[id].qtd;
+}, 0);
+}
+
+function totalCarrinho() {
+return Object.keys(ESTADO_CARRINHO).reduce(function (soma, id) {
+var linha = ESTADO_CARRINHO[id];
+return soma + linha.item.preco * linha.qtd;
+}, 0);
+}
+
+function alterarQtd(id, delta) {
+var linha = ESTADO_CARRINHO[id];
+if (!linha) {
+var item = itemPorId(id);
+if (!item || delta <= 0) return;
+ESTADO_CARRINHO[id] = { item: item, qtd: delta, obs: '' };
+} else {
+linha.qtd += delta;
+if (linha.qtd <= 0) delete ESTADO_CARRINHO[id];
+}
+renderizarCarrinho();
+renderizarControlesCards();
+}
+
+function definirObs(id, texto) {
+if (ESTADO_CARRINHO[id]) ESTADO_CARRINHO[id].obs = texto.slice(0, OBS_MAX);
+}
+
+/* =========================================================
+   JS — RENDERIZAÇÃO DO CARRINHO
+   Re-renderiza a lista inteira a cada mudança (simples e suficiente para
+   um carrinho pequeno). Os campos de observação são re-criados, então
+   o valor é lido do estado, não do DOM antigo.
+   Total e contagem usam aria-live para anunciar mudanças ao leitor de tela.
+   ========================================================= */
+var FORMATAR_BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+function renderizarCarrinho() {
+var lista = document.getElementById('carrinho-lista');
+var vazio = document.getElementById('carrinho-vazio');
+var ids = Object.keys(ESTADO_CARRINHO);
+var total = FORMATAR_BRL.format(totalCarrinho());
+var qtd = quantidadeTotal();
+
+lista.innerHTML = '';
+ids.forEach(function (id) {
+var linha = ESTADO_CARRINHO[id];
+var li = document.createElement('li');
+li.className = 'carrinho-item';
+li.innerHTML =
+'<div class="carrinho-item-topo">' +
+'<span class="carrinho-item-nome">' + escapar(linha.item.nome) + '</span>' +
+'<span class="carrinho-item-subtotal">' + FORMATAR_BRL.format(linha.item.preco * linha.qtd) + '</span>' +
+'</div>' +
+'<div class="carrinho-item-linha">' +
+'<span class="carrinho-item-preco">' + FORMATAR_BRL.format(linha.item.preco) + ' cada</span>' +
+'<div class="qtd-controle">' +
+'<button type="button" class="qtd-btn" data-acao="menos" data-id="' + id + '" aria-label="Remover um ' + escapar(linha.item.nome) + '">−</button>' +
+'<span class="qtd-valor" aria-live="off">' + linha.qtd + '</span>' +
+'<button type="button" class="qtd-btn" data-acao="mais" data-id="' + id + '" aria-label="Adicionar um ' + escapar(linha.item.nome) + '">+</button>' +
+'</div>' +
+'</div>' +
+'<div class="campo carrinho-item-obs">' +
+'<label for="obs-' + id + '" class="sr-only">Observações para ' + escapar(linha.item.nome) + '</label>' +
+'<input class="input-campo" type="text" id="obs-' + id + '" data-obs="' + id + '" maxlength="' + OBS_MAX + '" placeholder="Ex: sem cebola" value="' + escapar(linha.obs) + '">' +
+'</div>';
+lista.appendChild(li);
+});
+
+vazio.hidden = ids.length > 0;
+document.getElementById('total-carrinho').textContent = total;
+document.getElementById('total-topo').textContent = total;
+document.getElementById('contador-itens').textContent =
+qtd === 0 ? '' : qtd + (qtd === 1 ? ' item no carrinho' : ' itens no carrinho');
+}
+
+/* Sincroniza os controles "- N +" dos cards com o estado atual. */
+function renderizarControlesCards() {
+document.querySelectorAll('#lista-burgers .burger-card').forEach(function (card) {
+var id = card.dataset.id;
+var item = itemPorId(id);
+var linha = ESTADO_CARRINHO[id];
+var zona = card.querySelector('.card-qtd');
+var qtd = linha ? linha.qtd : 0;
+if (!zona) return;
+if (qtd === 0) {
+zona.innerHTML =
+'<button type="button" class="btn btn-primario btn-adicionar" data-acao="add" data-id="' + id + '" aria-label="Adicionar um ' + escapar(item.nome) + '">Adicionar</button>';
+} else {
+zona.innerHTML =
+'<div class="qtd-controle">' +
+'<button type="button" class="qtd-btn" data-acao="menos" data-id="' + id + '" aria-label="Remover um ' + escapar(item.nome) + '">−</button>' +
+'<span class="qtd-valor" aria-live="polite">' + qtd + '</span>' +
+'<button type="button" class="qtd-btn" data-acao="mais" data-id="' + id + '" aria-label="Adicionar um ' + escapar(item.nome) + '">+</button>' +
+'</div>';
+}
+});
+}
+
+/* Anexa a zona de quantidade em cada card (chamado após cada render do cardápio). */
+function anexarControlesCards() {
+document.querySelectorAll('#lista-burgers .burger-card').forEach(function (card) {
+if (!card.querySelector('.card-qtd')) {
+var zona = document.createElement('div');
+zona.className = 'card-qtd';
+card.querySelector('.burger-corpo').appendChild(zona);
+}
+});
+renderizarControlesCards();
+}
+
+/* =========================================================
+   JS — VALIDAÇÃO
+   Regras: nome >= 2 caracteres; em entrega, rua, número e bairro obrigatórios.
+   Retirada ignora todos os campos de endereço. O primeiro campo inválido
+   recebe foco e é rolado para a tela (com comportamento respeitando reduced motion).
+   ========================================================= */
+var FORMULARIO = null;
+var MODO_ENTREGA = true;
+var REDUZIR_MOVIMENTO_PEDIDO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function ehEntrega() {
+return document.getElementById('tipo-entrega').checked;
+}
+
+/* Liga/desliga os campos de endereço. disabled (e não só display:none) impede
+   tabulação para campos ocultos e evita que a validação nativa os considere.
+   hidden tira o grupo da árvore visual; disabled tira do fluxo de foco. */
+function alternarTipo() {
+MODO_ENTREGA = ehEntrega();
+var grupo = document.getElementById('grupo-endereco');
+var campos = grupo.querySelectorAll('input, textarea, select');
+grupo.hidden = !MODO_ENTREGA;
+campos.forEach(function (c) { c.disabled = !MODO_ENTREGA; });
+limparErros();
+}
+
+function mostrarErro(campoId, erroId, mensagem) {
+var campo = document.getElementById(campoId);
+var erro = document.getElementById(erroId);
+campo.setAttribute('aria-invalid', 'true');
+erro.textContent = mensagem;
+}
+
+function limparErro(campoId, erroId) {
+var campo = document.getElementById(campoId);
+var erro = document.getElementById(erroId);
+campo.removeAttribute('aria-invalid');
+erro.textContent = '';
+}
+
+function limparErros() {
+['campo-nome:erro-nome', 'campo-rua:erro-rua', 'campo-numero:erro-numero', 'campo-bairro:erro-bairro'].forEach(function (par) {
+var p = par.split(':');
+limparErro(p[0], p[1]);
+});
+}
+
+/* Valida o formulário; devolve lista de problemas na ordem do DOM. */
+function validar() {
+var problemas = [];
+var nome = document.getElementById('campo-nome').value.trim();
+if (nome.length < 2) {
+problemas.push({ campo: 'campo-nome', erro: 'erro-nome', msg: 'Informe seu nome (mínimo 2 letras).' });
+}
+if (MODO_ENTREGA) {
+if (!document.getElementById('campo-rua').value.trim()) {
+problemas.push({ campo: 'campo-rua', erro: 'erro-rua', msg: 'Informe a rua ou avenida.' });
+}
+if (!document.getElementById('campo-numero').value.trim()) {
+problemas.push({ campo: 'campo-numero', erro: 'erro-numero', msg: 'Informe o número.' });
+}
+if (!document.getElementById('campo-bairro').value.trim()) {
+problemas.push({ campo: 'campo-bairro', erro: 'erro-bairro', msg: 'Informe o bairro.' });
+}
+}
+return problemas;
+}
+
+function focarPrimeiroInvalido(problemas) {
+if (!problemas.length) return;
+var alvo = document.getElementById(problemas[0].campo);
+alvo.focus();
+alvo.scrollIntoView({ block: 'center', behavior: REDUZIR_MOVIMENTO_PEDIDO ? 'auto' : 'smooth' });
+}
+
+function mostrarAlerta(texto) {
+document.getElementById('alerta-pedido').textContent = texto;
+}
+
+/* =========================================================
+   JS — MONTAGEM DA MENSAGEM WHATSAPP
+   Formato exato: título, nome, tipo, endereço, itens e total.
+   Importante: o valor após o "x" é o SUBTOTAL do item (qtd × preço unitário),
+   não o preço unitário. Itens sem observação não geram a linha "Obs:".
+   Quebras de linha reais (\n) são aceitas pelo WhatsApp após encodeURIComponent.
+   ========================================================= */
+var NUMERO_WHATS = '5511972217312';
+
+function montarEnderecoLinha() {
+var rua = document.getElementById('campo-rua').value.trim();
+var numero = document.getElementById('campo-numero').value.trim();
+var comp = document.getElementById('campo-complemento').value.trim();
+var bairro = document.getElementById('campo-bairro').value.trim();
+var ref = document.getElementById('campo-referencia').value.trim();
+var partes = [rua + ', ' + numero];
+if (comp) partes.push(comp);
+partes.push('Bairro ' + bairro);
+if (ref) partes.push('Ref.: ' + ref);
+return partes.join(' - ');
+}
+
+function montarMensagem() {
+var nome = document.getElementById('campo-nome').value.trim();
+var tel = document.getElementById('campo-telefone').value.trim();
+var obsGeral = document.getElementById('campo-obs-geral').value.trim();
+var linhas = [];
+linhas.push('*Pedido - Do Zé Burguer*');
+linhas.push('Nome: ' + nome);
+if (tel) linhas.push('Telefone: ' + tel);
+linhas.push('Tipo: ' + (MODO_ENTREGA ? 'Entrega' : 'Retirada'));
+linhas.push('Endereço: ' + (MODO_ENTREGA ? montarEnderecoLinha() : 'Retirada no balcão'));
+linhas.push('---');
+Object.keys(ESTADO_CARRINHO).forEach(function (id) {
+var linha = ESTADO_CARRINHO[id];
+var subtotal = linha.item.preco * linha.qtd;
+linhas.push(linha.qtd + 'x ' + linha.item.nome + ' — ' + FORMATAR_BRL.format(subtotal));
+if (linha.obs.trim()) linhas.push('   Obs: ' + linha.obs.trim());
+});
+linhas.push('---');
+if (obsGeral) linhas.push('Obs: ' + obsGeral);
+linhas.push('*Total: ' + FORMATAR_BRL.format(totalCarrinho()) + '*');
+return linhas.join('\n');
+}
+
+/* Abrimos com window.open(..., '_blank', 'noopener,noreferrer'): nova aba sem
+   deixar a página de pedido acessível via window.opener (segurança) e sem
+   perder o carrinho nesta página, caso o WhatsApp falhe ao abrir. */
+function enviarWhatsapp() {
+var url = 'https://wa.me/' + NUMERO_WHATS + '?text=' + encodeURIComponent(montarMensagem());
+window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+/* =========================================================
+   JS — FORMULÁRIO E DELEGAÇÃO DE EVENTOS
+   Os cards são recriados a cada filtro; por isso os botões de adicionar
+   NÃO recebem listener direto. Um único listener no container do cardápio
+   captura o clique (event delegation) e funciona para qualquer card novo.
+   ========================================================= */
+function configurarCardapioDelegacao() {
+document.getElementById('lista-burgers').addEventListener('click', function (e) {
+var botao = e.target.closest('button[data-acao]');
+if (!botao) return;
+var id = botao.dataset.id;
+var acao = botao.dataset.acao;
+if (acao === 'add' || acao === 'mais') alterarQtd(id, 1);
+if (acao === 'menos') alterarQtd(id, -1);
+var card = botao.closest('.burger-card');
+if (card) {
+var foco = card.querySelector('button[data-acao="add"], button[data-acao="mais"]') || botao;
+foco.focus();
+}
+});
+}
+
+function configurarCarrinhoEventos() {
+var lista = document.getElementById('carrinho-lista');
+lista.addEventListener('click', function (e) {
+var botao = e.target.closest('button[data-acao]');
+if (!botao) return;
+alterarQtd(botao.dataset.id, botao.dataset.acao === 'mais' ? 1 : -1);
+});
+lista.addEventListener('input', function (e) {
+var campo = e.target.closest('input[data-obs]');
+if (campo) definirObs(campo.dataset.obs, campo.value);
+});
+}
+
+function configurarToggleCarrinho() {
+var carrinho = document.getElementById('carrinho');
+var botao = document.getElementById('carrinho-toggle');
+var mq = window.matchMedia('(min-width: 900px)');
+botao.addEventListener('click', function () {
+var aberto = carrinho.classList.toggle('aberto');
+botao.setAttribute('aria-expanded', String(aberto));
+});
+function aoMudarLayout() {
+if (mq.matches) {
+carrinho.classList.remove('aberto');
+botao.setAttribute('aria-expanded', 'false');
+}
+}
+if (mq.addEventListener) mq.addEventListener('change', aoMudarLayout);
+else mq.addListener(aoMudarLayout);
+}
+
+function configurarFormulario() {
+FORMULARIO = document.getElementById('form-pedido');
+document.querySelectorAll('input[name="tipo"]').forEach(function (r) {
+r.addEventListener('change', alternarTipo);
+});
+['campo-nome', 'campo-rua', 'campo-numero', 'campo-bairro'].forEach(function (campoId) {
+var campo = document.getElementById(campoId);
+campo.addEventListener('input', function () {
+if (campo.getAttribute('aria-invalid') === 'true') {
+var erro = document.getElementById(campoId.replace('campo-', 'erro-'));
+campo.removeAttribute('aria-invalid');
+erro.textContent = '';
+}
+});
+});
+FORMULARIO.addEventListener('submit', function (e) {
+e.preventDefault();
+mostrarAlerta('');
+limparErros();
+if (quantidadeTotal() === 0) {
+mostrarAlerta('Seu carrinho está vazio — adicione pelo menos um item para pedir.');
+document.getElementById('cardapio').scrollIntoView({ block: 'start', behavior: REDUZIR_MOVIMENTO_PEDIDO ? 'auto' : 'smooth' });
+return;
+}
+var problemas = validar();
+problemas.forEach(function (p) { mostrarErro(p.campo, p.erro, p.msg); });
+if (problemas.length) {
+focarPrimeiroInvalido(problemas);
+return;
+}
+enviarWhatsapp();
+});
+}
+
+/* =========================================================
+   JS — ACESSIBILIDADE E PREFERÊNCIAS
+   Rolagem e transições respeitam prefers-reduced-motion. Anúncios
+   de total e contagem usam aria-live polite; erros, aria-live assertive.
+   ========================================================= */
+function iniciarPedido() {
+anexarControlesCards();
+configurarCardapioDelegacao();
+configurarCarrinhoEventos();
+configurarToggleCarrinho();
+configurarFormulario();
+alternarTipo();
+renderizarCarrinho();
+}
+
+/* Re-anexa controles e observa novos cards após cada re-render do filtro. */
+var _renderOriginal = typeof renderizarCardapio === 'function' ? null : null;
+
+document.addEventListener('DOMContentLoaded', function () {
+iniciarPedido();
+});
+
+/* =========================================================
+   DADOS DO CARDÁPIO
+   === SUBSTITUA AQUI PELOS DADOS REAIS DO CARDÁPIO ===
+   Basta editar ou expandir este array: a interface se atualiza sozinha.
+   Campos: id, categoria ("burgers" | "acompanhamentos" | "bebidas"),
+   nome, descricao, preco (número em reais), tags (array), destaque (opcional).
+   ========================================================= */
+var CARDAPIO = [
+{ id: 'ze-classico', categoria: 'burgers', nome: 'Zé Clássico', descricao: 'Blend de 160g na chapa, cheddar derretido, alface crocante, tomate e molho da casa no pão brioche.', preco: 34.9, tags: ['mais pedido'], destaque: true },
+{ id: 'duplo-esquina', categoria: 'burgers', nome: 'Duplo Esquina', descricao: 'Dois blends de 120g, duplo queijo prato, picles e cebola caramelizada no ponto certo.', preco: 44.9, tags: [] },
+{ id: 'variz-bacon', categoria: 'burgers', nome: 'Variz Bacon', descricao: 'Blend na chapa, bacon crocante, barbecue defumado e cebola roxa em conserva.', preco: 39.9, tags: [] },
+{ id: 'carone-cheddar', categoria: 'burgers', nome: 'Carone Cheddar', descricao: 'Blend de 160g coberto com cheddar cremoso em dose dupla, cebolinha e maionese da casa.', preco: 41.9, tags: [] },
+{ id: 'veg-quebrada', categoria: 'burgers', nome: 'Veg da Quebrada', descricao: 'Disco de grão-de-bico temperado na casa, rúcula, tomate seco e maionese de limão.', preco: 36.9, tags: ['vegetariano'] },
+{ id: 'picante-beco', categoria: 'burgers', nome: 'Picante do Beco', descricao: 'Blend de 160g com jalapeño em conserva, pimenta defumada, pepper jack e molho picante.', preco: 38.9, tags: ['picante'] },
+{ id: 'batata-rustica', categoria: 'acompanhamentos', nome: 'Batata rústica', descricao: 'Com páprica e alecrim.', preco: 18.0, tags: [] },
+{ id: 'batata-cheddar-bacon', categoria: 'acompanhamentos', nome: 'Batata com cheddar e bacon', descricao: 'Batata rústica coberta com cheddar derretido e bacon crocante.', preco: 26.0, tags: ['mais pedido'] },
+{ id: 'onion-rings', categoria: 'acompanhamentos', nome: 'Onion rings', descricao: 'Anéis de cebola empanados na casa.', preco: 22.0, tags: [] },
+{ id: 'nuggets', categoria: 'acompanhamentos', nome: 'Nuggets de frango', descricao: 'Porção com 8 unidades e molho da casa.', preco: 24.0, tags: [] },
+{ id: 'refri-lata', categoria: 'bebidas', nome: 'Refrigerante lata', descricao: 'Coca-Cola, Guaraná ou Sprite, 350ml.', preco: 7.0, tags: [] },
+{ id: 'cerveja-long-neck', categoria: 'bebidas', nome: 'Cerveja long neck', descricao: 'Pilsen ou weiss, bem gelada.', preco: 16.0, tags: ['mais pedido'] },
+{ id: 'suco-natural', categoria: 'bebidas', nome: 'Suco natural', descricao: 'Laranja, limão ou maracujá, feito na hora.', preco: 12.0, tags: ['vegetariano'] },
+{ id: 'agua-com-gas', categoria: 'bebidas', nome: 'Água com gás', descricao: 'Garrafa de 500ml.', preco: 6.0, tags: [] }
+];
+
+/* =========================================================
+   FORMATAÇÃO
+   O formatter é criado UMA vez, fora do loop de renderização:
+   construir um Intl.NumberFormat é caro; reutilizá-lo é muito mais rápido.
+   ========================================================= */
+var FORMATAR_PRECO = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+/* Mapeia cada tag para sua classe de cor (pares de contraste AA definidos no CSS). */
+function classeTag(tag) {
+if (tag === 'mais pedido') return 'tag-mais-pedido';
+if (tag === 'picante') return 'tag-picante';
+if (tag === 'vegetariano') return 'tag-vegetariano';
+return 'tag-padrao';
+}
+
+/* Escapa texto antes de inserir via innerHTML (evita injeção caso os dados venham de fora). */
+function escapar(texto) {
+return String(texto)
+.replace(/&/g, '&amp;')
+.replace(/</g, '&lt;')
+.replace(/>/g, '&gt;')
+.replace(/"/g, '&quot;');
+}
+
+/* =========================================================
+   RENDERIZAÇÃO
+   Cria os cards a partir do array. Após criar, cada card precisa ser
+   observado pelo IntersectionObserver de reveal: sem isso ele fica invisível
+   para sempre (erro comum com conteúdo dinâmico).
+   ========================================================= */
+var listaCardapio = null;
+var observadorReveal = null;
+var REDUZIR_MOVIMENTO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function criarCard(item, indice) {
+var card = document.createElement('article');
+card.className = 'burger-card';
+card.style.setProperty('--i', indice % 6);
+card.dataset.id = item.id;
+card.innerHTML =
+'<div class="burger-corpo">' +
+'<div class="burger-topo">' +
+'<h3 class="burger-nome">' + escapar(item.nome) + '</h3>' +
+'<span class="burger-preco">' + FORMATAR_PRECO.format(item.preco) + '</span>' +
+'</div>' +
+'<p class="burger-desc">' + escapar(item.descricao) + '</p>' +
+'<div class="burger-tags">' +
+(item.tags || []).map(function (t) {
+return '<span class="tag-chip ' + classeTag(t) + '">' + escapar(t) + '</span>';
+}).join('') +
+'</div>' +
+'</div>';
+return card;
+}
+
+function renderizarCardapio(categoria) {
+var itens = CARDAPIO.filter(function (i) {
+return categoria === 'todos' || i.categoria === categoria;
+});
+var fragmento = document.createDocumentFragment();
+itens.forEach(function (item, i) {
+var card = criarCard(item, i);
+fragmento.appendChild(card);
+});
+listaCardapio.innerHTML = '';
+listaCardapio.appendChild(fragmento);
+if (typeof anexarControlesCards === 'function') anexarControlesCards();
+
+/* Cada card criado dinamicamente é observado (ou marcado visível) para não ficar com opacity 0 */
+listaCardapio.querySelectorAll('.burger-card').forEach(function (c) {
+if (REDUZIR_MOVIMENTO || !observadorReveal) {
+c.classList.add('is-visible', 'visivel');
+} else {
+observadorReveal.observe(c);
+}
+});
+return itens.length;
+}
+
+/* =========================================================
+   FILTRO
+   Animação de saída: .is-hiding nos cards atuais, esperamos o transitionend
+   (ou ~200ms de segurança), depois trocamos o conteúdo e a entrada aparece
+   com stagger. Só animamos opacity/transform.
+   Com reduced motion, a troca é instantânea.
+   ========================================================= */
+var filtroAtual = 'todos';
+var NOMES_CATEGORIA = { todos: 'todos os itens', burgers: 'Burgers', acompanhamentos: 'Acompanhamentos', bebidas: 'Bebidas' };
+
+function anunciarContagem(quantidade, categoria) {
+document.getElementById('contagem-filtro').textContent =
+quantidade + (quantidade === 1 ? ' item' : ' itens') + ' em ' + NOMES_CATEGORIA[categoria];
+}
+
+function marcarBotaoAtivo(categoria) {
+document.querySelectorAll('.filtro-btn').forEach(function (b) {
+b.setAttribute('aria-pressed', String(b.dataset.filtro === categoria));
+});
+}
+
+function aplicarFiltro(categoria) {
+if (categoria === filtroAtual) return;
+filtroAtual = categoria;
+marcarBotaoAtivo(categoria);
+
+if (REDUZIR_MOVIMENTO) {
+anunciarContagem(renderizarCardapio(categoria), categoria);
+return;
+}
+var cards = listaCardapio.querySelectorAll('.burger-card');
+cards.forEach(function (c) { c.classList.add('is-hiding'); });
+
+var trocado = false;
+function trocar() {
+if (trocado) return;
+trocado = true;
+anunciarContagem(renderizarCardapio(categoria), categoria);
+listaCardapio.querySelectorAll('.burger-card').forEach(function (c) {
+c.classList.add('is-entrando');
+requestAnimationFrame(function () {
+requestAnimationFrame(function () { c.classList.remove('is-entrando'); });
+});
+});
+}
+var primeiro = cards[0];
+if (primeiro) {
+primeiro.addEventListener('transitionend', trocar, { once: true });
+}
+setTimeout(trocar, 220);
+}
+
+/* Filtro navegável por teclado: setas esquerda/direita movem o foco entre os botões.
+   aria-pressed (e não role="tab") porque filtro de conteúdo não é um painel de abas. */
+function configurarFiltro() {
+var botoes = Array.prototype.slice.call(document.querySelectorAll('.filtro-btn'));
+botoes.forEach(function (b, idx) {
+b.addEventListener('click', function () { aplicarFiltro(b.dataset.filtro); });
+b.addEventListener('keydown', function (e) {
+if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+e.preventDefault();
+var prox = e.key === 'ArrowRight' ? (idx + 1) % botoes.length : (idx - 1 + botoes.length) % botoes.length;
+botoes[prox].focus();
+}
+});
+});
+}
+
+/* =========================================================
+   ANIMAÇÕES
+   Observador de reveal dos cards dinâmicos: definido antes da primeira render.
+   ========================================================= */
+function criarObservadorReveal() {
+if (REDUZIR_MOVIMENTO || !('IntersectionObserver' in window)) return null;
+return new IntersectionObserver(function (entradas) {
+entradas.forEach(function (e) {
+if (e.isIntersecting) {
+e.target.classList.add('is-visible');
+e.target.classList.add('visivel');
+observadorReveal.unobserve(e.target);
+}
+});
+}, { threshold: 0.12 });
+}
+
+/* =========================================================
+   STATUS DE FUNCIONAMENTO
+   Por que Intl.DateTimeFormat com timeZone e não new Date().getHours()?
+   getHours() usa o fuso do VISITANTE: quem está em outro estado ou país veria
+   horário errado. Com timeZone: 'America/Sao_Paulo' obtemos hora e dia reais de Brasília.
+
+   LÓGICA DE VIRADA DE DIA:
+   Sex e Sáb abrem às 18h e fecham à 00h. Modelamos o fechamento como 24 (meia-noite
+   do dia seguinte), ou seja, um valor maior que 1440 minutos no dia de origem.
+   Intervalo SEMIABERTO [abre, fecha): inclui o início, exclui o fim.
+   Portanto sexta às 23h59 está aberta, e sábado às 00h00 já está FECHADA.
+   Para uma consulta de madrugada (ex.: sábado 00h15), checamos o dia anterior:
+   se ele atravessava a meia-noite E o horário atual é < fechamento-24 (ou seja, < 0),
+   ainda estaria aberto. Como 00h00 não é < 0, o resultado é fechado — exatamente
+   a semântica pedida. Os cálculos ficam em horas decimais para clareza.
+   ========================================================= */
+var FUSO = 'America/Sao_Paulo';
+var HORARIOS = {
+0: { abre: 18, fecha: 22 },   // Domingo 18h-22h
+1: null,                      // Segunda: fechado
+2: null,                      // Terça: fechado
+3: { abre: 18, fecha: 23 },   // Quarta 18h-23h
+4: { abre: 18, fecha: 23 },   // Quinta 18h-23h
+5: { abre: 18, fecha: 24 },   // Sexta 18h-00h
+6: { abre: 18, fecha: 24 }    // Sábado 18h-00h
+};
+var NOMES_DIAS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+var FORMATADOR_SP = new Intl.DateTimeFormat('en-US', {
+timeZone: FUSO, weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false
+});
+var MAPA_DIAS = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+
+/* Retorna { dia (0-6), horaDecimal } no horário de Brasília. */
+function agoraSP() {
+var mapa = {};
+FORMATADOR_SP.formatToParts(new Date()).forEach(function (p) { mapa[p.type] = p.value; });
+return {
+dia: MAPA_DIAS[mapa.weekday],
+horaDecimal: (parseInt(mapa.hour, 10) % 24) + parseInt(mapa.minute, 10) / 60
+};
+}
+
+/* Retorna { aberto, proximaAbertura: { dia, hora, offset } | null }.
+   Semântica: aberto se abre <= agora < fecha. Para madrugada, checa o dia anterior. */
+function estaAberto(agora) {
+var hoje = HORARIOS[agora.dia];
+if (hoje && agora.horaDecimal >= hoje.abre && agora.horaDecimal < hoje.fecha) {
+return { aberto: true, proximaAbertura: null, fechaEm: hoje.fecha };
+}
+// Madrugada: se ontem atravessou a meia-noite, a janela residual é [0, fecha-24).
+// Com fecha=24, fecha-24=0, então a janela residual é vazia e 00h00 já está fechada.
+var ontem = HORARIOS[(agora.dia + 6) % 7];
+if (ontem && ontem.fecha > 24 - 0 && agora.horaDecimal < ontem.fecha - 24) {
+return { aberto: true, proximaAbertura: null, fechaEm: ontem.fecha - 24 };
+}
+// Fechado: procura a próxima abertura (hoje ainda pode abrir mais tarde).
+for (var i = 0; i <= 7; i++) {
+var dia = (agora.dia + i) % 7;
+var cfg = HORARIOS[dia];
+if (!cfg) continue;
+if (i === 0 && agora.horaDecimal >= cfg.abre) continue;
+return { aberto: false, proximaAbertura: { dia: dia, hora: cfg.abre, offset: i }, fechaEm: null };
+}
+return { aberto: false, proximaAbertura: null, fechaEm: null };
+}
+
+function formatarHora(h) { return h + 'h'; }
+
+function descreverProxima(p) {
+if (p.offset === 0) return 'hoje às ' + formatarHora(p.hora);
+if (p.offset === 1) return 'amanhã às ' + formatarHora(p.hora);
+return NOMES_DIAS[p.dia].toLowerCase() + ' às ' + formatarHora(p.hora);
+}
+
+/* Atualiza badge, texto e tabela. Badge com role="status" + aria-live="polite":
+   anúncio educado, sem interromper o usuário (não é emergência, então não usamos "assertive"). */
+function atualizarStatus() {
+var badge = document.getElementById('status-badge');
+var texto = document.getElementById('status-texto');
+var proximo = document.getElementById('status-proximo');
+var agora = agoraSP();
+var st = estaAberto(agora);
+
+if (st.aberto) {
+badge.className = 'status-badge aberto';
+texto.textContent = 'Aberto agora';
+proximo.innerHTML = 'Fecha às <strong>' + formatarHora(st.fechaEm === 24 ? 0 : st.fechaEm) + '</strong>. Pode vir!';
+} else {
+badge.className = 'status-badge fechado';
+texto.textContent = 'Fechado';
+proximo.innerHTML = st.proximaAbertura
+? 'Abrimos <strong>' + descreverProxima(st.proximaAbertura) + '</strong>.'
+: 'Confira o horário abaixo.';
+}
+destacarDiaAtual(agora.dia);
+}
+
+/* Destaca a linha do dia atual usando o mesmo cálculo de dia de Brasília. */
+function destacarDiaAtual(dia) {
+document.querySelectorAll('#tabela-horarios tr[data-dia]').forEach(function (tr) {
+var ehHoje = parseInt(tr.getAttribute('data-dia'), 10) === dia;
+tr.classList.toggle('dia-hoje', ehHoje);
+var th = tr.querySelector('th');
+var marca = th.querySelector('.marca-hoje');
+if (ehHoje && !marca) {
+marca = document.createElement('span');
+marca.className = 'marca-hoje';
+marca.textContent = 'hoje';
+th.appendChild(marca);
+} else if (!ehHoje && marca) {
+marca.remove();
+}
+});
+}
+
+/* Intervalo de 60s: a regra tem granularidade de minutos, então 60s basta.
+   Pausamos quando a aba fica oculta para economizar recursos e recalculamos ao voltar. */
+var intervaloStatus = null;
+function iniciarIntervalo() {
+if (intervaloStatus === null) intervaloStatus = setInterval(atualizarStatus, 60000);
+}
+function pararIntervalo() {
+if (intervaloStatus !== null) { clearInterval(intervaloStatus); intervaloStatus = null; }
+}
+function configurarVisibilidade() {
+document.addEventListener('visibilitychange', function () {
+if (document.visibilityState === 'hidden') {
+pararIntervalo();
+} else {
+atualizarStatus();
+iniciarIntervalo();
+}
+});
+}
+
+/* =========================================================
+   ACESSIBILIDADE
+   Pares de contraste (AA >= 4.5:1): âmbar #F2A93B com preto #0B0A08 (~11:1);
+   vermelho #B33A22 com off-white #F5EFE3 (~5.6:1); verde #2E6B3F com off-white (~6:1).
+   Texto sobre âmbar é preto (off-white sobre âmbar teria ~2:1 e falharia).
+   ========================================================= */
+// Os pares já estão aplicados no CSS (.tag-*, .filtro-btn[aria-pressed="true"], .status-badge).
+
+/* =========================================================
+   MENU, SCROLL E ANO (mantidos do original)
+   ========================================================= */
+/* =========================================================
+   JS DO MENU MOBILE — CONTROLE DE ESTADO
+   Estado único: `menuAberto`. Toda mudança passa por abrirMenu()/fecharMenu(),
+   que atualizam aria-expanded, aria-label, classes e aria-hidden juntos,
+   evitando estados inconsistentes.
+   ========================================================= */
+var menuAberto = false;
+var menuEl = null;
+var botaoMenuEl = null;
+var elementoAnteriorFoco = null;
+var MQ_DESKTOP = window.matchMedia('(min-width: 640px)');
+var MQ_REDUCAO = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function abrirMenu() {
+if (menuAberto) return;
+menuAberto = true;
+/* Guardamos o elemento com foco, mas ao fechar devolvemos o foco ao botão hambúrguer */
+elementoAnteriorFoco = document.activeElement;
+botaoMenuEl.setAttribute('aria-expanded', 'true');
+botaoMenuEl.setAttribute('aria-label', 'Fechar menu');
+menuEl.classList.add('aberto');
+menuEl.setAttribute('aria-hidden', 'false');
+document.body.classList.add('menu-aberto');
+bloquearScroll();
+ativarFocusTrap();
+/* Foco no primeiro link após a transição: com reduced motion não há espera */
+var atraso = MQ_REDUCAO.matches ? 0 : 320;
+setTimeout(function () {
+var primeiro = menuEl.querySelector('a');
+if (primeiro && menuAberto) primeiro.focus();
+}, atraso);
+}
+
+function fecharMenu(devolverFoco) {
+if (!menuAberto) return;
+menuAberto = false;
+desativarFocusTrap();
+menuEl.classList.remove('aberto');
+menuEl.setAttribute('aria-hidden', 'true');
+botaoMenuEl.setAttribute('aria-expanded', 'false');
+botaoMenuEl.setAttribute('aria-label', 'Abrir menu');
+document.body.classList.remove('menu-aberto');
+desbloquearScroll();
+if (devolverFoco !== false) botaoMenuEl.focus();
+elementoAnteriorFoco = null;
+}
+
+/* Fecha ao resize para >= 640px: no desktop a nav horizontal volta a ser a única
+   navegação. Sem isso o painel ficaria aberto e bloquearia o scroll sem o botão
+   (que fica display:none) estar visível para fechá-lo. */
+function configurarResize() {
+var tratar = function (e) { if (e.matches) fecharMenu(false); };
+if (MQ_DESKTOP.addEventListener) MQ_DESKTOP.addEventListener('change', tratar);
+else MQ_DESKTOP.addListener(tratar);
+}
+
+function configurarMenuMobile() {
+menuEl = document.getElementById('nav-mobile');
+botaoMenuEl = document.getElementById('btn-menu');
+botaoMenuEl.addEventListener('click', function () {
+if (menuAberto) fecharMenu(); else abrirMenu();
+});
+/* Clique em link fecha o menu; a âncora segue normalmente (scroll suave já trata) */
+menuEl.querySelectorAll('a').forEach(function (link) {
+link.addEventListener('click', function () { fecharMenu(false); });
+});
+/* Clique no backdrop (o próprio painel, não seus filhos) fecha */
+menuEl.addEventListener('click', function (e) {
+if (e.target === menuEl) fecharMenu();
+});
+/* Esc fecha o menu */
+document.addEventListener('keydown', function (e) {
+if (e.key === 'Escape' && menuAberto) fecharMenu();
+});
+configurarResize();
+}
+
+/* =========================================================
+   JS DO MENU MOBILE — FOCUS TRAP
+   Algoritmo a cada keydown de Tab:
+   1. Lista os focáveis DENTRO do painel. Recalculamos a cada tecla porque o
+      conteúdo pode mudar (ex.: links adicionados) e uma lista guardada ficaria
+      desatualizada.
+   2. Filtramos por visibilidade: elementos com display:none não têm
+      offsetParent nem client rects e não recebem foco; incluí-los quebraria a ciclagem.
+   3. Se Tab estiver no último focável -> preventDefault e foca o primeiro.
+   4. Se Shift+Tab estiver no primeiro -> preventDefault e foca o último.
+   5. Se o foco estiver FORA do painel (ex.: clique no fundo), levamos para o primeiro.
+   ========================================================= */
+var SELETOR_FOCAVEIS = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+function focaveisDoPainel() {
+return Array.prototype.slice.call(menuEl.querySelectorAll(SELETOR_FOCAVEIS))
+.filter(function (el) { return el.offsetParent !== null || el.getClientRects().length > 0; });
+}
+
+function manipularTab(e) {
+if (e.key !== 'Tab' || !menuAberto) return;
+var focaveis = focaveisDoPainel();
+if (focaveis.length === 0) { e.preventDefault(); botaoMenuEl.focus(); return; }
+var primeiro = focaveis[0];
+var ultimo = focaveis[focaveis.length - 1];
+var ativo = document.activeElement;
+var dentro = menuEl.contains(ativo);
+if (!dentro) { e.preventDefault(); primeiro.focus(); return; }
+if (e.shiftKey && ativo === primeiro) { e.preventDefault(); ultimo.focus(); }
+else if (!e.shiftKey && ativo === ultimo) { e.preventDefault(); primeiro.focus(); }
+}
+
+function ativarFocusTrap() {
+document.addEventListener('keydown', manipularTab, true);
+}
+function desativarFocusTrap() {
+document.removeEventListener('keydown', manipularTab, true);
+}
+
+/* =========================================================
+   JS DO MENU MOBILE — SCROLL LOCK
+   Usar position:fixed + top:-scrollY evita o "salto" para o topo no iOS Safari,
+   que ignora overflow:hidden no body. Guardamos scrollY, fixamos o body e,
+   ao fechar, restauramos a posição com window.scrollTo.
+   Limitação conhecida: overflow:hidden sozinho é mais simples mas no iOS
+   o conteúdo de fundo ainda rola ao arrastar.
+   ========================================================= */
+var scrollSalvo = 0;
+function bloquearScroll() {
+scrollSalvo = window.scrollY || window.pageYOffset;
+document.body.style.position = 'fixed';
+document.body.style.top = '-' + scrollSalvo + 'px';
+document.body.style.left = '0';
+document.body.style.right = '0';
+document.body.style.width = '100%';
+}
+function desbloquearScroll() {
+document.body.style.position = '';
+document.body.style.top = '';
+document.body.style.left = '';
+document.body.style.right = '';
+document.body.style.width = '';
+window.scrollTo(0, scrollSalvo);
+}
+
+/* =========================================================
+   ACESSIBILIDADE E PREFERÊNCIAS
+   - Estados aria (aria-expanded, aria-label, aria-hidden) sempre sincronizados.
+   - Seção ativa também marcada no painel mobile (.is-active).
+   - Reduced motion: transições zeradas no CSS e foco imediato no JS.
+   - O painel não é observado pelo IntersectionObserver de reveal.
+   ========================================================= */
+function marcarSecaoAtivaMobile(id) {
+document.querySelectorAll('#nav-mobile a[data-secao]').forEach(function (a) {
+a.classList.toggle('is-active', a.getAttribute('data-secao') === id);
+});
+}
+
+function configurarScrollSuave() {
+document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+link.addEventListener('click', function (e) {
+var alvo = document.querySelector(link.getAttribute('href'));
+if (!alvo) return;
+e.preventDefault();
+alvo.scrollIntoView({ behavior: 'smooth', block: 'start' });
+history.replaceState(null, '', link.getAttribute('href'));
+});
+});
+}
+
+function configurarRevealEstatico() {
+var alvos = document.querySelectorAll('.reveal, #tabela-horarios tr, .nav-principal li, .nav-mobile li, .galeria-item');
+document.querySelectorAll('#tabela-horarios tr, .nav-principal li, .nav-mobile li, .galeria-item').forEach(function (el, i) {
+el.style.setProperty('--i', i % 6);
+});
+if (REDUZIR_MOVIMENTO || !observadorReveal) {
+alvos.forEach(function (el) { el.classList.add('is-visible'); });
+return;
+}
+alvos.forEach(function (el) { observadorReveal.observe(el); });
+}
+
+function configurarPausaContinua() {
+if (REDUZIR_MOVIMENTO || !('IntersectionObserver' in window)) return;
+var hero = document.querySelector('.hero');
+var obs = new IntersectionObserver(function (entradas) {
+entradas.forEach(function (e) { hero.classList.toggle('is-paused', !e.isIntersecting); });
+}, { threshold: 0 });
+obs.observe(hero);
+}
+
+function configurarScroll() {
+var header = document.querySelector('.site-header');
+var visual = document.getElementById('hero-visual');
+var ticking = false;
+function atualizar() {
+ticking = false;
+var y = window.scrollY || window.pageYOffset;
+header.classList.toggle('is-scrolled', y > 100);
+if (!REDUZIR_MOVIMENTO && visual) {
+var limite = visual.offsetHeight * 0.15;
+var deslocamento = Math.min(y * 0.12, limite);
+visual.style.transform = 'translate3d(0, ' + deslocamento.toFixed(1) + 'px, 0)';
+}
+}
+window.addEventListener('scroll', function () {
+if (!ticking) { ticking = true; requestAnimationFrame(atualizar); }
+}, { passive: true });
+atualizar();
+}
+
+function configurarSecaoAtiva() {
+if (!('IntersectionObserver' in window)) return;
+var links = document.querySelectorAll('.nav-principal a[data-secao]');
+var mapa = {};
+links.forEach(function (l) { mapa[l.getAttribute('data-secao')] = l; });
+var obs = new IntersectionObserver(function (entradas) {
+entradas.forEach(function (e) {
+if (!e.isIntersecting) return;
+links.forEach(function (l) { l.classList.remove('is-active'); });
+var link = mapa[e.target.id];
+if (link) link.classList.add('is-active');
+marcarSecaoAtivaMobile(e.target.id);
+});
+}, { rootMargin: '-45% 0px -50% 0px' });
+Object.keys(mapa).forEach(function (id) {
+var s = document.getElementById(id);
+if (s) obs.observe(s);
+});
+}
+
+function preencherAno() {
+var el = document.getElementById('ano-atual');
+if (el) el.textContent = new Date().getFullYear();
+}
+
+/* Salvaguarda de inicialização: se algo falhar, removemos js-anim para que todo o conteúdo apareça sem animação */
+function desligarAnimacaoSeFalhar(erro) {
+document.documentElement.classList.remove('js-anim');
+if (window.console && console.error) console.error('Falha na inicialização do site:', erro);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+try {
+listaCardapio = document.getElementById('lista-burgers');
+observadorReveal = criarObservadorReveal();
+renderizarCardapio('todos');
+configurarFiltro();
+atualizarStatus();
+configurarMenuMobile();
+configurarScrollSuave();
+configurarRevealEstatico();
+configurarPausaContinua();
+configurarScroll();
+configurarSecaoAtiva();
+configurarVisibilidade();
+preencherAno();
+iniciarIntervalo();
+} catch (erro) {
+desligarAnimacaoSeFalhar(erro);
+}
+/* Salvaguarda: se o observer não disparar em 1,5s, força .is-visible em todos os cards do cardápio */
+setTimeout(function () {
+document.querySelectorAll('#lista-burgers .burger-card').forEach(function (c) {
+c.classList.add('is-visible', 'visivel');
+});
+}, 1500);
+});
+
+})();
+</script>
+</body>
+</html>
